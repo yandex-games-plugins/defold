@@ -1,0 +1,82 @@
+local i18n = require('ysdk.i18n');
+local T = i18n.localize;
+
+local function log(newline)
+    local node = gui.get_node("label_log")
+    local text = gui.get_text(node)
+    gui.set_text(node, text == "" and newline or text .. "\n" .. newline)
+    local text_metrics = gui.get_text_metrics_from_node(node)
+    local pos = gui.get_position(node)
+    pos.y = 640 - math.min(0, gui.get_size(node).y - text_metrics.height);
+    gui.set_position(node, pos)
+end
+
+local buttons = {
+    ["env_language/button"] = function() log(ysdk.environment.i18n.lang) end,
+    ["set_language_en/button"] = function() i18n.set_lang("en") end,
+    ["set_language_ru/button"] = function() i18n.set_lang("ru") end,
+    ["fullscreen_ad/button"] = function()
+        ysdk.adv.show_fullscreen_adv()
+        ysdk.adv.show_fullscreen_adv({
+            on_open = function(self)
+                log("show_rewarded_adv on_open")
+            end,
+            on_close = function(self, was_shown)
+                log("show_fullscreen_adv on_close " .. tostring(was_shown))
+            end,
+            on_error = function(self, error)
+                log("show_rewarded_adv on_error " .. error)
+            end,
+            on_offline = function (self)
+                log("show_rewarded_adv on_offline")
+            end
+        })
+    end,
+    ["rewarded_ad/button"] = function()
+        ysdk.adv.show_rewarded_video({
+            on_open = function(self)
+                log("show_rewarded_adv on_open")
+            end,
+            on_rewarded = function(self)
+                log("show_rewarded_adv on_rewarded")
+            end,
+            on_close = function(self)
+                log("show_rewarded_adv on_close")
+            end,
+            on_error = function(self, error)
+                log("show_rewarded_adv on_error" .. error)
+            end,
+        })
+    end,
+    ["get_player/button"] = function()
+        ysdk.player.get_info(function(self, player, signature)
+            if player then
+                log("player: " .. json.encode(player) .. "\nsignature: " .. tostring(signature))
+            end
+        end, { signed = true })
+    end,
+}
+
+local function on_localize()
+    i18n.gui("Localized Button/button_label", "button")
+    log(json.encode(i18n.get_translations()))
+end
+
+function init(self)
+    msg.post(".", "acquire_input_focus")
+    i18n.on(on_localize)
+end
+
+function final(self)
+    i18n.off(on_localize)
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("touch") and action.pressed then
+        for button, callback in pairs(buttons) do
+            if gui.pick_node(gui.get_node(button), action.x, action.y) then
+                callback()
+            end
+        end
+    end
+end

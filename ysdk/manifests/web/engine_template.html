@@ -1,0 +1,35 @@
+<html>
+  <head> </head>
+  <body>
+    <script id="engine-start" type="text/javascript" merge="keep">
+      var loaded = false;
+      var onload = function () {
+        YaGames.init().then(function (ysdk) {
+          window.ysdk = ysdk;
+          ysdk
+            .getStorage()
+            .then((safeStorage) =>
+              Object.defineProperty(window, "localStorage", {
+                get: () => safeStorage,
+              })
+            )
+            .then(() => {
+              if (!loaded) {
+                if (typeof load_engine === "function") {
+                  load_engine();
+                } else {
+                  EngineLoader.load("canvas", "{{exe-name}}");
+                }
+                loaded = true;
+              }
+            });
+        });
+      };
+      var ysdk = document.createElement("script");
+      ysdk.type = "text/javascript";
+      ysdk.src = "https://yandex.ru/games/sdk/v2";
+      ysdk.onload = onload;
+      document.head.appendChild(ysdk);
+    </script>
+  </body>
+</html>
