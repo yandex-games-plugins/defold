@@ -1,0 +1,6 @@
+/.internal
+/build
+.DS_Store
+Thumbs.db
+/.defold
+/.vscode
