@@ -40,6 +40,10 @@ function M.off(cb)
   change_lang_callbacks[cb] = nil
 end
 
+function M.get_translations()
+  return current_translations
+end
+
 ---@param code string The language code
 function M.set_language(code)
   local translations = parse_translations(code)
@@ -65,7 +69,7 @@ function M.key(key)
 end
 
 function M.gui(node_id, key)
-  gui.set_text(gui.get_node(node_id), M.localize(key))
+  gui.set_text(gui.get_node(node_id), M.key(key))
 end
 
 return M;

@@ -13,8 +13,8 @@ end
 
 local buttons = {
     ["env_language/button"] = function() log(ysdk.environment.i18n.lang) end,
-    ["set_language_en/button"] = function() i18n.set_lang("en") end,
-    ["set_language_ru/button"] = function() i18n.set_lang("ru") end,
+    ["set_language_en/button"] = function() i18n.set_language("en") end,
+    ["set_language_ru/button"] = function() i18n.set_language("ru") end,
     ["fullscreen_ad/button"] = function()
         ysdk.adv.show_fullscreen_adv()
         ysdk.adv.show_fullscreen_adv({
