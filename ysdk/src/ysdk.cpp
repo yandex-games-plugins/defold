@@ -1566,7 +1566,7 @@ static int Init_DeviceInfo(lua_State *L) {
 #if defined(DM_PLATFORM_HTML5)
   const char *result = JS_GetDeviceInfo();
 #else
-  const char *result = "{\"type\":\"desktop\',\"isMobile\":false,\"isDesktop\":"
+  const char *result = "{\"type\":\"desktop\",\"isMobile\":false,\"isDesktop\":"
                        "true,\"isTablet\":false,\"isTV\":false}";
 #endif
 
