@@ -406,6 +406,24 @@ ysdk.device_info = {
 
 -- endregion
 
+-- region Flags
+
+---@class YSDK_ClientFeature
+---@field name string
+---@field value string
+
+---@class YSDK_GetFlagsParams
+---@field defaultFlags table<string, string>|nil
+---@field clientFeatures YSDK_ClientFeature[]|nil 
+
+---@param params YSDK_GetFlagsParams|nil
+---@param callback fun(self: any, flags: table<string, string>): nil
+ysdk.get_flags = function(params, callback)
+  print("getFlags")
+end
+
+-- endregion
+
 -- region Types
 
 ---@class PhotoTable

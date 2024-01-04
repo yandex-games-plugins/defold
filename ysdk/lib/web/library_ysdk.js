@@ -563,6 +563,24 @@ JS_DispatchEvent: function (ceventName, cdetail) {
   },
 
 //#endregion
+
+//#region Flags
+
+  JS_GetFlags: function (handler, callback, cparams) {
+    const params = cparams ? JSON.parse(UTF8ToString(cparams)) : {};
+
+    window.ysdk
+      .getFlags(params)
+      .then(function (flags) {
+        const cflags = Utils.allocateJSON(flags);
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, cflags)
+      })
+      .catch(function () {
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
+      });
+  },
+
+//#endregion
 };
 
 autoAddDeps(LisGamesSDKLib, '$Utils');

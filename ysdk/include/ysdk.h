@@ -378,4 +378,20 @@ char *JS_GetDeviceInfo();
 
 #pragma endregion
 
+#pragma region Flags
+
+// ===============================================
+// Get Flags
+// ===============================================
+
+typedef void (*GetFlagsHandler)(dmScript::LuaCallbackInfo *callback,
+                                const int success, const char *json);
+
+extern "C" {
+void JS_GetFlags(GetFlagsHandler handler, dmScript::LuaCallbackInfo *callback,
+                 const char *params);
+}
+
+#pragma endregion
+
 #endif

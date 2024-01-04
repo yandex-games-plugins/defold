@@ -1580,8 +1580,59 @@ static int Init_DeviceInfo(lua_State *L) {
 
 #pragma endregion
 
-static const luaL_reg Module_methods[] = {
-    {"on_event", CPP_OnEvent}, {"dispatch_event", CPP_DispatchEvent}, {0, 0}};
+#pragma region Flags
+
+// ===============================================
+// Get Flags
+// ===============================================
+
+static void CPP_GetFlags_Handler(dmScript::LuaCallbackInfo *callback,
+                                 const int success, const char *json) {
+  lua_State *L = dmScript::GetCallbackLuaContext(callback);
+
+  if (!dmScript::SetupCallback(callback)) {
+    dmLogError("Failed to setup callback");
+    return;
+  }
+
+  if (success) {
+    dmScript::JsonToLua(L, json, strlen(json));
+  } else {
+    lua_pushnil(L);
+  }
+
+  dmScript::PCall(L, 3, 0);
+
+  dmScript::TeardownCallback(callback);
+}
+
+static int CPP_GetFlags(lua_State *L) {
+  int top = lua_gettop(L);
+
+  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+  char *params;
+  if (lua_isnoneornil(L, 2)) {
+    params = NULL;
+  } else {
+    params = dmYandex::LuaTableToJSON(L, 2);
+  }
+
+#if defined(DM_PLATFORM_HTML5)
+  JS_GetFlags((GetFlagsHandler)CPP_GetFlags_Handler, callback, params);
+#endif
+
+  free(params);
+
+  assert(top == lua_gettop(L));
+  return 0;
+}
+
+#pragma endregion
+
+static const luaL_reg Module_methods[] = {{"get_flags", CPP_GetFlags},
+                                          {"on_event", CPP_OnEvent},
+                                          {"dispatch_event", CPP_DispatchEvent},
+                                          {0, 0}};
 
 static void LuaInit(lua_State *L) {
   int top = lua_gettop(L);
