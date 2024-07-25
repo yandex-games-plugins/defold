@@ -124,7 +124,8 @@ let LisGamesSDKLib = {
             small: player.getPhoto('small') || "",
             medium: player.getPhoto('medium') || "",
             large: player.getPhoto('large') || "",
-          }
+          },
+          payingStatus: player.getPayingStatus() || "",
         });
 
         const csignature = Utils.allocateString(player.signature || '');
