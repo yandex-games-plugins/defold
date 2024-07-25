@@ -12,7 +12,15 @@ ysdk.features = {
     ready = function()
       print("loading_ready")
     end
-  }
+  },
+  gameplay_api = {
+    start = function()
+      print("gameplay_start")
+    end,
+    stop = function()
+      print("gameplay_stop")
+    end,
+  },
 }
 
 -- endregion

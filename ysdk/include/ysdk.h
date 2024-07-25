@@ -6,9 +6,23 @@
 
 #pragma region Features
 
+// ===============================================
+// Loading API
+// ===============================================
+
 extern "C" {
 void JS_LoadingAPI_Ready();
 }
+
+// ===============================================
+// Gameplay API
+// ===============================================
+
+extern "C" {
+void JS_GameplayAPI_Start();
+void JS_GameplayAPI_Stop();
+}
+
 
 #pragma endregion
 

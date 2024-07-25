@@ -15,7 +15,18 @@ let LisGamesSDKLib = {
     if (window.ysdk.features.LoadingAPI) {
       window.ysdk.features.LoadingAPI.ready();
     }
-    console.log('LoadingAPI');
+  },
+
+  JS_GameplayAPI_Start: function () {
+    if (window.ysdk.features.GameplayAPI) {
+      window.ysdk.features.GameplayAPI.start();
+    }
+  },
+
+  JS_GameplayAPI_Stop: function () {
+    if (window.ysdk.features.GameplayAPI) {
+      window.ysdk.features.GameplayAPI.stop();
+    }
   },
 
 //#endregion

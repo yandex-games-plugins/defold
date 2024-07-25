@@ -23,11 +23,32 @@ static int CPP_LoadingAPI_Ready(lua_State *L) {
 }
 
 // ===============================================
+// Gameplay API
+// ===============================================
+
+static int CPP_GameplayAPI_Start(lua_State *L) {
+#if defined(DM_PLATFORM_HTML5)
+  JS_GameplayAPI_Start();
+#endif
+  return 1;
+}
+
+static int CPP_GameplayAPI_Stop(lua_State *L) {
+#if defined(DM_PLATFORM_HTML5)
+  JS_GameplayAPI_Stop();
+#endif
+  return 1;
+}
+
+// ===============================================
 // Init Features Table
 // ===============================================
 
 static const luaL_reg LoadingAPI_methods[] = {{"ready", CPP_LoadingAPI_Ready},
                                               {0, 0}};
+
+static const luaL_reg GameplayAPI_methods[] = {
+    {"start", CPP_GameplayAPI_Start}, {"stop", CPP_GameplayAPI_Stop}, {0, 0}};
 
 static int Init_Features(lua_State *L) {
   int top = lua_gettop(L);
@@ -39,6 +60,11 @@ static int Init_Features(lua_State *L) {
   lua_newtable(L);
   luaL_register(L, NULL, LoadingAPI_methods);
   lua_settable(L, -3); // loading_api -> features
+
+  lua_pushliteral(L, "gameplay_api");
+  lua_newtable(L);
+  luaL_register(L, NULL, GameplayAPI_methods);
+  lua_settable(L, -3); // gameplay_api -> features
 
   lua_settable(L, -3); // features -> ysdk
 
