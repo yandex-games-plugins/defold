@@ -23,7 +23,6 @@ void JS_GameplayAPI_Start();
 void JS_GameplayAPI_Stop();
 }
 
-
 #pragma endregion
 
 #pragma region Payments

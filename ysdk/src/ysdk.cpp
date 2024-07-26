@@ -111,15 +111,15 @@ static void CPP_CreatePurchase_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_CreatePurchase(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
   char *params = dmYandex::LuaTableToJSON(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_CreatePurchase((CreatePurchaseHandler)CPP_CreatePurchase_Handler, callback,
                     params);
-#endif
 
   free(params);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -160,15 +160,16 @@ static void CPP_GetPurchases_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetPurchases(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
   char *params = dmYandex::LuaTableToJSON(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetPurchases((GetPurchasesHandler)CPP_GetPurchases_Handler, callback,
                   params);
-#endif
 
   free(params);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -201,9 +202,9 @@ static void CPP_GetCatalog_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetCatalog(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetCatalog((GetCatalogHandler)CPP_GetCatalog_Handler, callback);
 #endif
 
@@ -257,7 +258,6 @@ static int CPP_ConsumePurchase(lua_State *L) {
 // ===============================================
 
 static const luaL_reg Payments_methods[] = {
-    {"create_purchase", CPP_CreatePurchase},
     {"create_purchase", CPP_CreatePurchase},
     {"get_purchases", CPP_GetPurchases},
     {"get_catalog", CPP_GetCatalog},
@@ -315,20 +315,24 @@ static void CPP_GetPlayerInfo_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetPlayerInfo(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
   char *params;
-  if (lua_isnoneornil(L, 2)) {
-    params = NULL;
-  } else {
+
+  if (lua_istable(L, 2)) {
     params = dmYandex::LuaTableToJSON(L, 2);
+  } else {
+    params = NULL;
   }
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetPlayerInfo((GetPlayerInfoHandler)CPP_GetPlayerInfo_Handler, callback,
                    params);
-#endif
 
-  free(params);
+  if (params != NULL) {
+    free(params);
+  }
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -357,9 +361,9 @@ static void CPP_OpenAuthDialog_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_OpenAuthDialog(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_OpenAuthDialog((OpenAuthDialogHandler)CPP_OpenAuthDialog_Handler,
                     callback);
 #endif
@@ -396,9 +400,9 @@ static void CPP_GetPlayerIDsPerGame_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetPlayerIDsPerGame(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetPlayerIDsPerGame(
       (GetPlayerIDsPerGameHandler)CPP_GetPlayerIDsPerGame_Handler, callback);
 #endif
@@ -461,14 +465,14 @@ static int CPP_GetPlayerData(lua_State *L) {
 static int CPP_SetPlayerData(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   char *data = dmYandex::LuaTableToJSON(L, 1);
   int flush = lua_toboolean(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_SetPlayerData(data, flush);
-#endif
 
   free(data);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -515,7 +519,7 @@ static int CPP_GetPlayerStats(lua_State *L) {
                     keys);
 
   if (keys != NULL) {
-  free(keys);
+    free(keys);
   }
 #endif
 
@@ -530,13 +534,13 @@ static int CPP_GetPlayerStats(lua_State *L) {
 static int CPP_IncrementPlayerStats(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   char *increments = dmYandex::LuaTableToJSON(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_IncrementPlayerStats(increments);
-#endif
 
   free(increments);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -549,13 +553,13 @@ static int CPP_IncrementPlayerStats(lua_State *L) {
 static int CPP_SetPlayerStats(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   char *stats = dmYandex::LuaTableToJSON(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_SetPlayerStats(stats);
-#endif
 
   free(stats);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -627,9 +631,9 @@ static void CPP_CanReview_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_CanReview(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_CanReview((CanReviewHandler)CPP_CanReview_Handler, callback);
 #endif
 
@@ -665,9 +669,9 @@ static void CPP_RequestReview_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_RequestReview(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_RequestReview((RequestReviewHandler)CPP_RequestReview_Handler, callback);
 #endif
 
@@ -834,6 +838,7 @@ static void CPP_ShowFullscreenAdv_Handler(dmScript::LuaCallbackInfo *onOpen,
 static int CPP_ShowFullscreenAdv(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *onOpen = NULL;
 
   lua_pushstring(L, "on_open");
@@ -870,7 +875,6 @@ static int CPP_ShowFullscreenAdv(lua_State *L) {
   }
   lua_pop(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_ShowFullscreenAdv((ShowFullscreenAdvHandler)CPP_ShowFullscreenAdv_Handler,
                        onOpen, onClose, onError, onOffline);
 #endif
@@ -975,6 +979,7 @@ static void CPP_ShowRewardedVideo_Handler(dmScript::LuaCallbackInfo *onOpen,
 static int CPP_ShowRewardedVideo(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *onOpen = NULL;
 
   lua_pushstring(L, "on_open");
@@ -1011,7 +1016,6 @@ static int CPP_ShowRewardedVideo(lua_State *L) {
   }
   lua_pop(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_ShowRewardedVideo((ShowRewardedVideoHandler)CPP_ShowRewardedVideo_Handler,
                        onOpen, onRewarded, onClose, onError);
 #endif
@@ -1060,9 +1064,9 @@ static void CPP_GetBannerAdvStatus_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetBannerAdvStatus(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetBannerAdvStatus(
       (GetBannerAdvStatusHandler)CPP_GetBannerAdvStatus_Handler, callback);
 #endif
@@ -1151,11 +1155,11 @@ static void CPP_OnEvent_Handler(dmScript::LuaCallbackInfo *callback) {
 static int CPP_OnEvent(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *eventName = luaL_checkstring(L, 1);
 
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_OnEvent((OnEventHandler)CPP_OnEvent_Handler, callback, eventName);
 #endif
 
@@ -1166,14 +1170,14 @@ static int CPP_OnEvent(lua_State *L) {
 static int CPP_DispatchEvent(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *eventName = luaL_checkstring(L, 1);
   char *detail = dmYandex::LuaTableToJSON(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_DispatchEvent(eventName, detail);
-#endif
 
   free(detail);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -1211,10 +1215,10 @@ CPP_GetLeaderboardDescription_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetLeaderboardDescription(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *leaderboardName = luaL_checkstring(L, 1);
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetLeaderboardDescription(
       (GetLeaderboardDescriptionHandler)CPP_GetLeaderboardDescription_Handler,
       callback, leaderboardName);
@@ -1231,11 +1235,11 @@ static int CPP_GetLeaderboardDescription(lua_State *L) {
 static int CPP_SetLeaderboardScore(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *leaderboardName = luaL_checkstring(L, 1);
   const char *score = lua_tolstring(L, 2, NULL);
   const char *extraData = lua_tolstring(L, 3, NULL);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_SetLeaderboardScore(leaderboardName, score, extraData);
 #endif
 
@@ -1271,10 +1275,10 @@ CPP_GetLeaderboardPlayerEntry_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetLeaderboardPlayerEntry(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *leaderboardName = luaL_checkstring(L, 1);
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetLeaderboardPlayerEntry(
       (GetLeaderboardPlayerEntryHandler)CPP_GetLeaderboardPlayerEntry_Handler,
       callback, leaderboardName);
@@ -1312,6 +1316,7 @@ CPP_GetLeaderboardEntries_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetLeaderboardEntries(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *leaderboardName = luaL_checkstring(L, 1);
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
 
@@ -1322,13 +1327,12 @@ static int CPP_GetLeaderboardEntries(lua_State *L) {
     params = dmYandex::LuaTableToJSON(L, 3);
   }
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetLeaderboardEntries(
       (GetLeaderboardEntriesHandler)CPP_GetLeaderboardEntries_Handler, callback,
       leaderboardName, params);
-#endif
 
   free(params);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -1508,9 +1512,9 @@ static void CPP_CanShowPrompt_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_CanShowPrompt(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_CanShowPrompt((CanShowPromptHandler)CPP_CanShowPrompt_Handler, callback);
 #endif
 
@@ -1545,9 +1549,9 @@ static void CPP_ShowPrompt_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_ShowPrompt(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_ShowPrompt((ShowPromptHandler)CPP_ShowPrompt_Handler, callback);
 #endif
 
@@ -1587,9 +1591,9 @@ static int Init_Shortcut(lua_State *L) {
 static int CPP_Clipboard_WriteText(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *text = luaL_checkstring(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
   JS_ClipboardWriteText(text);
 #endif
 
@@ -1673,7 +1677,9 @@ static void CPP_GetFlags_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetFlags(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
   char *params;
   if (lua_isnoneornil(L, 2)) {
     params = NULL;
@@ -1681,11 +1687,12 @@ static int CPP_GetFlags(lua_State *L) {
     params = dmYandex::LuaTableToJSON(L, 2);
   }
 
-#if defined(DM_PLATFORM_HTML5)
   JS_GetFlags((GetFlagsHandler)CPP_GetFlags_Handler, callback, params);
-#endif
 
-  free(params);
+  if (params != NULL) {
+    free(params);
+  }
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -1746,52 +1753,29 @@ static void LuaInit(lua_State *L) {
 
 static dmExtension::Result
 AppInitializeYandexGames(dmExtension::AppParams *params) {
-  // dmLogInfo("AppInitializeYandexGames");
   return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result InitializeYandexGames(dmExtension::Params *params) {
   LuaInit(params->m_L);
-  // dmLogInfo("Registered %s Extension", MODULE_NAME);
   return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result
 AppFinalizeYandexGames(dmExtension::AppParams *params) {
-  // dmLogInfo("AppFinalizeYandexGames");
   return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result FinalizeYandexGames(dmExtension::Params *params) {
-  // dmLogInfo("FinalizeYandexGames");
   return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result OnUpdateYandexGames(dmExtension::Params *params) {
-  // dmLogInfo("OnUpdateYandexGames");
   return dmExtension::RESULT_OK;
 }
 
 static void OnEventYandexGames(dmExtension::Params *params,
-                               const dmExtension::Event *event) {
-  switch (event->m_Event) {
-  case dmExtension::EVENT_ID_ACTIVATEAPP:
-    // dmLogInfo("OnEventYandexGames - EVENT_ID_ACTIVATEAPP");
-    break;
-  case dmExtension::EVENT_ID_DEACTIVATEAPP:
-    // dmLogInfo("OnEventYandexGames - EVENT_ID_DEACTIVATEAPP");
-    break;
-  case dmExtension::EVENT_ID_ICONIFYAPP:
-    // dmLogInfo("OnEventYandexGames - EVENT_ID_ICONIFYAPP");
-    break;
-  case dmExtension::EVENT_ID_DEICONIFYAPP:
-    // dmLogInfo("OnEventYandexGames - EVENT_ID_DEICONIFYAPP");
-    break;
-  default:
-    // dmLogWarning("OnEventYandexGames - Unknown event id");
-    break;
-  }
-}
+                               const dmExtension::Event *event) {}
 
 DM_DECLARE_EXTENSION(EXTENSION_SYMBOL, LIB_NAME, AppInitializeYandexGames,
                      AppFinalizeYandexGames, InitializeYandexGames,

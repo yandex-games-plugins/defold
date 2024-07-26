@@ -315,7 +315,7 @@ let LisGamesSDKLib = {
 
 //#region Adv
 
-  JS_ShowFullscreenAdv: function (handler, onOpen, onClose, onError, onOffline) {   
+  JS_ShowFullscreenAdv: function (handler, onOpen, onClose, onError, onOffline) {
     window.ysdk.adv.showFullscreenAdv({
         callbacks: {
             onOpen: function() {
