@@ -83,7 +83,7 @@ local player = {}
 ---@field photo PhotoTable
 
 ---@param callback fun(self: any, player: YSDK_Player_Info|nil, signature: string|nil): nil
----@param options {scopes: boolean|nil, signed: boolean|nil}
+---@param options {scopes: boolean|nil, signed: boolean|nil}|nil
 function player.get_info(callback, options)
   print("get_info")
 end
@@ -99,7 +99,7 @@ function player.get_ids_per_game(callback)
 end
 
 ---@param callback fun(self: any, data: table<string, any>|nil): nil
----@param keys string[]
+---@param keys string[]|nil
 function player.get_data(callback, keys)
   print("get_data")
 end
@@ -111,7 +111,7 @@ function player.set_data(data, flush)
 end
 
 ---@param callback fun(self: any, data: table<string, number>|nil): nil
----@param keys string[]
+---@param keys string[]|nil
 function player.get_stats(callback, keys)
   print("get_stats")
 end
