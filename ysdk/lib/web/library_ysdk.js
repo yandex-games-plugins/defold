@@ -325,7 +325,7 @@ let LisGamesSDKLib = {
               {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 1, Utils.allocateJSON(wasShown));
             },
             onError: function(error) {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 2, Utils.allocateString(error));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 2, Utils.allocateString(error.toString()));
             },
             onOffline: function() {
               {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 3, Utils.allocateString(''));
@@ -347,7 +347,7 @@ let LisGamesSDKLib = {
               {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 2, Utils.allocateString(''));
             },
             onError: function(error) { 
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 3, Utils.allocateString(error));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 3, Utils.allocateString(error.toString()));
             }
         }
     });
