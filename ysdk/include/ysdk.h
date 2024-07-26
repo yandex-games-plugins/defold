@@ -413,4 +413,12 @@ void JS_GetFlags(GetFlagsHandler handler, dmScript::LuaCallbackInfo *callback,
 
 #pragma endregion
 
+#pragma region Server Time
+
+extern "C" {
+double JS_GetServerTime();
+}
+
+#pragma endregion
+
 #endif

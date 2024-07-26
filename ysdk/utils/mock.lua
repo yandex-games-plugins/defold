@@ -434,6 +434,16 @@ end
 
 -- endregion
 
+-- region Server Time
+
+---@return number
+ysdk.server_time = function()
+  print("server_time")
+  return 0
+end
+
+--- endregion
+
 -- region Types
 
 ---@class PhotoTable

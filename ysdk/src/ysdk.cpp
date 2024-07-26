@@ -1693,9 +1693,33 @@ static int CPP_GetFlags(lua_State *L) {
 
 #pragma endregion
 
+#pragma region Server Time
+
+// ===============================================
+// Server Time
+// ===============================================
+
+static int CPP_ServerTime(lua_State *L) {
+  int top = lua_gettop(L);
+
+#if defined(DM_PLATFORM_HTML5)
+  double time = JS_GetServerTime();
+#else
+  double time = 0;
+#endif
+
+  lua_pushnumber(L, time);
+
+  assert(top + 1 == lua_gettop(L));
+  return 1;
+}
+
+#pragma endregion
+
 static const luaL_reg Module_methods[] = {{"get_flags", CPP_GetFlags},
                                           {"on_event", CPP_OnEvent},
                                           {"dispatch_event", CPP_DispatchEvent},
+                                          {"server_time", CPP_ServerTime},
                                           {0, 0}};
 
 static void LuaInit(lua_State *L) {

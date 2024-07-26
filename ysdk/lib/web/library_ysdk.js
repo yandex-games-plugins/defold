@@ -612,6 +612,14 @@ JS_DispatchEvent: function (ceventName, cdetail) {
   },
 
 //#endregion
+
+//#region Server Time
+
+  JS_GetServerTime: function (handler, callback) {
+    return window.ysdk.serverTime() || 0;
+  }
+
+//#endregion
 };
 
 autoAddDeps(LisGamesSDKLib, '$Utils');
