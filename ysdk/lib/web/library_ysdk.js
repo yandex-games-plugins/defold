@@ -202,7 +202,11 @@ let LisGamesSDKLib = {
   },
 
   JS_GetPlayerData: function (handler, callback, ckeys) {
-    const keys = JSON.parse(UTF8ToString(ckeys));
+    let keys;
+
+    if (ckeys) {
+      keys = JSON.parse(UTF8ToString(ckeys));
+    }
     
     window.ysdk.getPlayer()
       .then(function (player) {
@@ -228,7 +232,11 @@ let LisGamesSDKLib = {
   },
 
   JS_GetPlayerStats: function (handler, callback, ckeys) {
-    const keys = JSON.parse(UTF8ToString(ckeys));
+    let keys;
+
+    if (ckeys) {
+      keys = JSON.parse(UTF8ToString(ckeys));
+    }
     
     window.ysdk
       .getPlayer()

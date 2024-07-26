@@ -434,15 +434,21 @@ static void CPP_GetPlayerData_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetPlayerData(lua_State *L) {
   int top = lua_gettop(L);
 
-  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
-  char *keys = dmYandex::LuaTableToJSON(L, 2);
-
 #if defined(DM_PLATFORM_HTML5)
+  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
+  char *keys
+  if (lua_istable(L, 2)) {
+    keys = dmYandex::LuaTableToJSON(L, 2);
+  } else {
+    keys = NULL;
+  }
+
   JS_GetPlayerData((GetPlayerDataHandler)CPP_GetPlayerData_Handler, callback,
                    keys);
-#endif
 
   free(keys);
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
@@ -495,15 +501,23 @@ static void CPP_GetPlayerStats_Handler(dmScript::LuaCallbackInfo *callback,
 static int CPP_GetPlayerStats(lua_State *L) {
   int top = lua_gettop(L);
 
-  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
-  char *keys = dmYandex::LuaTableToJSON(L, 2);
-
 #if defined(DM_PLATFORM_HTML5)
+  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
+  char *keys;
+  if (lua_istable(L, 2)) {
+    keys = dmYandex::LuaTableToJSON(L, 2);
+  } else {
+    keys = NULL;
+  }
+
   JS_GetPlayerStats((GetPlayerStatsHandler)CPP_GetPlayerStats_Handler, callback,
                     keys);
-#endif
 
+  if (keys != NULL) {
   free(keys);
+  }
+#endif
 
   assert(top == lua_gettop(L));
   return 0;
