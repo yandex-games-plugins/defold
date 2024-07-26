@@ -1,11 +1,14 @@
 let LisGamesSDKLib = {
   $Utils: {
     allocateString: function (str) {
-      return allocate(intArrayFromString(str), ALLOC_STACK);
+      const size = lengthBytesUTF8(str) + 1;
+      const idx = _malloc(size);
+      stringToUTF8Array(str, HEAP8, idx, size);
+      return idx;
     },
 
     allocateJSON: function (str) {
-      return allocate(intArrayFromString(JSON.stringify(str)), ALLOC_STACK);
+      return Utils.allocateString(JSON.stringify(str));
     },
   },
 
