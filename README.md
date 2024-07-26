@@ -1,20 +1,21 @@
-# Документация
+[![YaGames Logo](cover.png)](https://github.com/yandex-games-plugins/defold)
 
-- [Установка плагина](docs/install.md)
+# Yandex.Games SDK for Defold
 
-## Методы SDK <a href="#docs/sdk-methods" id="docs/sdk-methods"></a>
+[Yandex Games](https://yandex.com/games/) is a catalog of browser-based online games that can be played on
+smartphones or desktop devices and require no installation. Most games are also available offline (code for
+these games is added to the device cache during the first gaming session).
 
-- [Старт игры](docs/sdk-methods/gameready.md)
-- [Внутриигровые покупки](docs/sdk-methods/purchases.md)
-- [Данные игрока](docs/sdk-methods/player.md)
-- [Оценка игры](docs/sdk-methods/review.md)
-- [Переменные окружения](docs/sdk-methods/environment.md)
-- [Работа с рекламой](docs/sdk-methods/adv.md)
-- [События](docs/sdk-methods/events.md)
-- [Лидерборды](docs/sdk-methods/leaderboard.md)
-- [Ярлык на рабочий стол](docs/sdk-methods/shortcut.md)
-- [Другие объекты и параметры SDK](docs/sdk-methods/params.md)
+### Installation
 
----
+You can procees to [Installation](https://plugins.lisgames.ru/defold/general/install) section of the documentation
+to get more info about how to install the plugin.
 
-- [Локализация](docs/i18n.md)
+### Documentation
+
+Check out the [Documentation](https://plugins.lisgames.ru/) to get more info about how to work with plugins.
+
+### Community
+
+Feel free to join our [Telegram Chat](https://t.me/yandexgamesplugins) to keep in touch with us, get the
+latest development news and take part in surveys!
