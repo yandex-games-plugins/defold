@@ -1,0 +1,764 @@
+- name: ysdk
+  type: table
+  desc: Function and constants for interacting with the YSDK API.
+  members:
+    # ===============================================
+    # Constants
+    # ===============================================
+
+    - name: features
+      type: table
+      desc: Experimental features that may change or be unavailable in the future.
+      members:
+        - name: loading_api
+          type: table
+          members:
+            - name: ready
+              type: function
+              desc: Signals the moment when the game has loaded all resources and is ready for user interaction.
+
+        - name: gameplay_api
+          type: table
+          members:
+            - name: start
+              type: function
+              desc: Signals the moment when the gameplay section of the game has started.
+
+            - name: stop
+              type: function
+              desc: Signals the moment when the gameplay has stopped or paused.
+
+    # ===============================================
+    # Payments
+    # ===============================================
+
+    - name: payments
+      type: table
+      desc: Functions for making payments and managing in-app purchases.
+      members:
+        - name: create_purchase
+          type: function
+          desc: Initiates a purchase of a product.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called when the purchase is complete or canceled.
+              parameters:
+                - name: purchase
+                  type: table
+                  desc: Purchase information.
+                  members:
+                    - name: product_id
+                      type: string
+                      desc: The ID of the product that was purchased.
+
+                    - name: purchase_token
+                      type: string
+                      desc: Token entitling the buyer to use the purchase.
+
+                    - name: developer_payload
+                      type: string
+                      optional: true
+                      desc: Optional parameter. Additional purchase data that you want to send to your server (transferred in the signature parameter).
+
+            - name: options
+              type: table
+              desc: A table containing the purchase options.
+              members:
+                - name: id
+                  type: string
+                  desc: The ID of the product to purchase.
+
+                - name: developer_payload
+                  type: string
+                  optional: true
+                  desc: Optional parameter. Additional purchase data that you want to send to your server (transferred in the signature parameter).
+
+                - name: signed
+                  type: boolean
+                  optional: true
+                  desc: Optional parameter. If true, the purchase will be signed with the user's private key.
+
+        - name: get_purchases
+          type: function
+          desc: Retrieves a list of available products.
+          args:
+            - name: callback
+              type: function
+              desc: A function that will be called with the list of products.
+              parameters:
+                - name: products
+                  type: table
+                  desc: A table containing the list of products.
+
+        - name: consume_purchase
+          type: function
+          desc: Consumes a purchase.
+          parameters:
+            - name: purchase_token
+              type: string
+              desc: The token of the purchase to consume.
+
+            - name: callback
+              type: function
+              optional: true
+              desc: A function that will be called when the purchase is consumed.
+              parameters:
+                - name: success
+                  type: boolean
+                  desc: True if the purchase was successfully consumed.
+
+    # ===============================================
+    # Player
+    # ===============================================
+
+    - name: player
+      type: table
+      desc: Functions for accessing and manipulaete player's information.
+      members:
+        - name: get_info
+          type: function
+          desc: Retrieves information about the player.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the player's information.
+              parameters:
+                - name: info
+                  type: table
+                  desc: A table containing the player's information.
+                  parameters:
+                    - name: logged_in
+                      type: boolean
+                      desc: True if the player is logged in.
+
+                    - name: unique_id
+                      type: string
+                      desc: The unique ID of the player.
+
+                    - name: name
+                      type: string
+                      desc: The name of the player.
+
+                    - name: paying_status
+                      type: string
+                      desc: The paying status of the player. Possible values are "paying", "partially_paying", "not_paying", "unknown".
+
+                    - name: photo
+                      type: table
+                      desc: The player's photo.
+                      members:
+                        - name: url
+                          type: string
+                          desc: The URL of the player's photo.
+                
+                - name: signature
+                  type: string
+                  desc: The signature of the player's information.
+        
+        - name: open_auth_dialog
+          type: function
+          desc: Opens the authentication dialog.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called when the dialog is closed.
+              parameters:
+                - name: authorized
+                  type: boolean
+                  desc: True if the player has been authorized.
+
+        - name: get_ids_per_game
+          type: function
+          desc: Retrieves the user IDs for all of the developer's games in which they have explicitly granted access to their personal data.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the list of player IDs.
+              parameters:
+                - name: ids
+                  type: table
+                  desc: User IDs list for all of the developer's games in which they have explicitly granted access to their personal data.
+
+        - name: get_data
+          type: function
+          desc: Retrieves the player's data.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the player's data.
+              parameters:
+                - name: data
+                  type: table
+                  desc: A table containing the player's data.
+            
+            - name: keys
+              type: table
+              optional: true
+              desc: Array containing the keys of the data to retrieve.
+        
+        - name: set_data
+          type: function
+          desc: Sets the player's data.
+          parameters:
+            - name: data
+              type: table
+              desc: A table containing the data to set.
+
+            - name: flush
+              type: boolean
+              optional: true
+              desc: If true, the data will be flushed to the server immediately.
+        
+        - name: get_stats
+          type: function
+          desc: Retrieves the player's statistics.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the player's statistics.
+              parameters:
+                - name: stats
+                  type: table
+                  desc: A table containing the player's statistics.
+            
+            - name: keys
+              type: table
+              optional: true
+              desc: Array containing the keys of the statistics to retrieve.
+        
+        - name: increment_stats
+          type: function
+          desc: Increments the player's statistics.
+          parameters:
+            - name: increments
+              type: table
+              desc: A table containing the statistics to increment.
+
+        - name: set_stats
+          type: function
+          desc: Sets the player's statistics.
+          parameters:
+            - name: stats
+              type: table
+              desc: A table containing the statistics to set.
+    
+    # =============================================== 
+    # Feedback
+    # ===============================================
+
+    - name: feedback
+      type: table
+      desc: Functions for receiving feedback from players.
+      members:
+        - name: can_review
+          type: function
+          desc: Checks if the player can leave a review.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the result.
+              parameters:
+                - name: can_review
+                  type: boolean
+                  desc: True if the player can leave a review.
+                
+                - name: reason
+                  type: string|nil
+                  desc: The reason why the player can't leave a review.
+    
+        - name: request_review
+          type: function
+          desc: Requests a review from the player.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the result.
+              parameters:
+                - name: feedback_sent
+                  type: boolean
+                  desc: True if player has sent feedback.
+
+    # ===============================================
+    # Environment
+    # ===============================================
+
+    - name: environment
+      type: table
+      desc: Provides information about the environment in which the game is running.
+      members:
+        - name: app
+          type: table
+          desc: Information about the app.
+          members:
+            - name: id
+              type: string
+              desc: The ID of the app.
+
+        - name: browser
+          type: table
+          desc: Information about the browser.
+          members:
+            - name: lang
+              type: string
+              desc: The language of the browser.
+
+        - name: i18n
+          type: table
+          desc: Information about the internationalization settings.
+          members:
+            - name: lang
+              type: string
+              desc: The language of the browser.
+
+            - name: tld
+              type: string
+              desc: The top-level domain of the browser.
+
+    # ===============================================
+    # Advertising
+    # ===============================================
+
+    - name: adv
+      type: table
+      desc: Functions for displaying ads.
+      members:
+        - name: show_fullscreen_adv
+          type: function
+          desc: Displays a fullscreen ad.
+          parameters:
+            - name: callbacks
+              type: table
+              desc: A table containing the callbacks.
+              members:
+                - name: on_open
+                  type: function
+                  optional: true
+                  desc: Called when an ad is opened successfully.
+
+                - name: on_close
+                  type: function
+                  optional: true
+                  desc: Called when an ad is closed, an error occurred, or an ad failed to open due to too frequent calls.
+
+                - name: on_error
+                  type: function
+                  optional: true
+                  desc: Called when an error occurs.
+
+                - name: on_offline
+                  type: function
+                  optional: true
+                  desc: Called when the network connection is lost (when offline mode is enabled).
+        
+        - name: show_rewarded_video
+          type: function
+          desc: Displays a rewarded video ad.
+          parameters:
+            - name: callbacks
+              type: table
+              desc: A table containing the callbacks.
+              members:
+                - name: on_open
+                  type: function
+                  optional: true
+                  desc: Called when a video ad is displayed on the screen.
+
+                - name: on_close
+                  type: function
+                  optional: true
+                  desc: Called when a user closes a video ad.
+
+                - name: on_rewarded
+                  type: function
+                  optional: true
+                  desc: Called when a video ad impression is counted. Use this function to specify a reward for viewing the video ad.
+
+                - name: on_error
+                  type: function
+                  optional: true
+                  desc: Called when an error occurs.
+        
+        - name: get_banner_adv_status
+          type: function
+          desc: Retrieves the status of the sticky banner ad.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the status of the sticky banner ad.
+              parameters:
+                - name: sticky_adv_is_showing
+                  type: boolean
+                  desc: True if the sticky banner ad is showing.
+
+                - name: reason
+                  type: string|nil
+                  desc: The reason why the sticky banner ad is not showing.
+        
+        - name: show_banner_adv
+          type: function
+          desc: Displays the sticky banner ad.
+          
+        - name: hide_banner_adv
+          type: function
+          desc: Hides the sticky banner ad.
+    
+    # ===============================================
+    # Events
+    # ===============================================
+    
+    - name: on_event
+      type: function
+      desc: Registers a listener for an SDK event.
+      parameters:
+        - name: eventName
+          type: string
+          desc: The name of the event to listen for.
+
+        - name: listener
+          type: function
+          desc: The function to call when the event is dispatched.
+    
+    - name: dispatch_event
+      type: function
+      desc: Dispatches an SDK event.
+      parameters:
+        - name: eventName
+          type: string
+          desc: The name of the event to dispatch.
+
+        - name: detail
+          type: table
+          optional: true
+          desc: Additional information about the event.
+        
+    # ===============================================
+    # Leaderboards
+    # ===============================================
+
+    - name: leaderboards
+      type: table
+      desc: Functions for working with leaderboards.
+      members:
+        - name: get_description
+          type: function
+          desc: Retrieves the leaderboard description.
+          parameters:
+            - name: leaderboard_name
+              type: string
+              desc: The name of the leaderboard.
+            
+            - name: callback
+              type: function
+              desc: A function that will be called with the leaderboard description.
+              parameters:
+                - name: description
+                  type: table
+                  desc: The leaderboard description.
+                  members:
+                    - name: app_id
+                      type: string
+                      desc: The application ID.
+
+                    - name: default
+                      type: boolean
+                      desc: True if the leaderboard is the primary leaderboard.
+
+                    - name: invert_sort_order
+                      type: boolean
+                      desc: False if rankings are sorted in descending order, true if rankings are sorted in ascending order.
+
+                    - name: decimal_offset
+                      type: number
+                      desc: The score offset.
+
+                    - name: type
+                      type: string
+                      desc: The leaderboard result type. Possible values are "numeric" and "time".
+
+                    - name: name
+                      type: string
+                      desc: The leaderboard name.
+
+                    - name: title
+                      type: table
+                      desc: Localized names.
+                      members:
+                        - name: lang
+                          type: string
+                          desc: The language of the name.
+
+                        - name: value
+                          type: string
+                          desc: The name.
+
+        - name: set_score
+          type: function
+          desc: Sets the player's score on the leaderboard.
+          parameters:
+            - name: leaderboard_name
+              type: string
+              desc: The name of the leaderboard.
+
+            - name: score
+              type: number
+              desc: The player's score.
+
+            - name: extraData
+              type: string
+              optional: true
+              desc: Additional information about the player.
+
+        - name: get_player_entry
+          type: function
+          desc: Retrieves the player's entry on the leaderboard.
+          parameters:
+            - name: leaderboard_name
+              type: string
+              desc: The name of the leaderboard.
+
+            - name: callback
+              type: function
+              desc: A function that will be called with the player's entry.
+              parameters:
+                - name: player_entry
+                  type: table
+                  desc: The player's entry.
+                  members:
+                    - name: score
+                      type: number
+
+        - name: get_entries
+          type: function
+          desc: Retrieves the leaderboard entries.
+          parameters:
+            - name: leaderboard_name
+              type: string
+              desc: The name of the leaderboard.
+
+            - name: callback
+              type: function
+              desc: A function that will be called with the leaderboard entries.
+              parameters:
+                - name: entries
+                  type: table
+                  desc: The leaderboard entries.
+                  members:
+                    - name: leaderboard
+                      type: table
+                      desc: Leaderboard description.
+                      members:
+                        - name: app_id
+                          type: string
+                          desc: The application ID.
+
+                        - name: default
+                          type: boolean
+                          desc: True if the leaderboard is the primary leaderboard.
+
+                        - name: invert_sort_order
+                          type: boolean
+                          desc: False if rankings are sorted in descending order, true if rankings are sorted in ascending order.
+
+                        - name: decimal_offset
+                          type: number
+                          desc: The score offset.
+
+                        - name: type
+                          type: string
+                          desc: The leaderboard result type. Possible values are "numeric" and "time".
+
+                        - name: name
+                          type: string
+                          desc: The leaderboard name.
+
+                        - name: title
+                          type: table
+                          desc: Localized names.
+                          members:
+                            - name: lang
+                              type: string
+                              desc: The language of the name.
+
+                            - name: value
+                              type: string
+                              desc: The name.
+
+                    - name: ranges
+                      type: table
+                      desc: Ranking ranges in the response.
+                      members:
+                        - name: start
+                          type: integer
+                          desc: The start of the range.
+
+                        - name: size
+                          type: integer
+                          desc: The size of the range.
+
+                    - name: user_rank
+                      type: integer
+                      desc: The user's rank. Returns 0 if none or if the request is for the top of the table without including the user.
+
+                    - name: entries
+                      type: table
+                      desc: Requested entries.
+                      members:
+                        - name: score
+                          type: number
+
+            - name: options
+              type: table
+              optional: true
+              desc: Additional options.
+              members:
+                - name: include_user
+                  type: boolean
+                  optional: true
+                  desc: Defines whether to include the logged-in user in the response
+    
+    # ===============================================
+    # Shortcut
+    # ===============================================
+
+    - name: shortcut
+      type: table
+      desc: Functions for creating shortcuts.
+      members:
+        - name: can_show_prompt
+          type: function
+          desc: Checks if the player can create a shortcut.
+
+        - name: show_prompt
+          type: function
+          desc: Shows a prompt for creating a shortcut.
+          parameters:
+            - name: callback
+              type: function
+              desc: A function that will be called with the result.
+              parameters:
+                - name: accepted
+                  type: boolean
+                  desc: True if the player accepted the prompt.
+    
+    # ===============================================
+    # Screen
+    # ===============================================
+
+    - name: screen
+      type: table
+      desc: Functions for working with the screen orientation and fullscreen mode.
+      members:
+        - name: fullscreen
+          type: table
+          desc: Functions for working with the fullscreen mode.
+          members:
+            - name: status
+              type: function
+              desc: Returns the current fullscreen status.
+              returns:
+                - type: string
+                - desc: The current fullscreen status. Possible values are "on" and "off".
+
+            - name: request
+              type: function
+              desc: Requests to switch to full-screen mode.
+
+            - name: exit
+              type: function
+              desc: Requests to leave full-screen mode.
+
+        - name: orientation
+          type: table
+          desc: Functions for working with the screen orientation.
+          members:
+            - name: get
+              type: function
+              desc: Returns the screen orientation.
+              returns:
+                - type: string
+                - desc: The screen orientation. Possible values are "portrait" and "landscape".
+
+            - name: set
+              type: function
+              desc: Locks the screen orientation.
+              parameters:
+                - name: value
+                  type: string
+                  desc: The screen orientation. Possible values are "portrait" and "landscape".
+
+    # ===============================================
+    # Clipboard
+    # ===============================================
+
+    - name: clipboard
+      type: table
+      desc: Functions for working with the clipboard.
+      members:
+        - name: write_text
+          type: function
+          desc: Writes text to the clipboard.
+          parameters:
+            - name: text
+              type: string
+              desc: The text to write to the clipboard.
+
+
+    # ===============================================
+    # DeviceInfo
+    # ===============================================
+
+    - name: device_info
+      type: table
+      desc: Information about the device.
+      members:
+        - name: type
+          type: string
+          desc: The type of the device. Possible values are "mobile", "desktop", "tablet", and "tv".
+
+        - name: isMobile
+          type: boolean
+          desc: True if the device is a mobile device.
+
+        - name: isDesktop
+          type: boolean
+          desc: True if the device is a desktop device.
+
+        - name: isTablet
+          type: boolean
+          desc: True if the device is a tablet.
+
+        - name: isTV
+          type: boolean
+          desc: True if the device is a TV.
+      
+    # ===============================================
+    # Flags
+    # ===============================================
+
+    - name: get_flags
+      type: function
+      desc: Retrieves the flags for the current player.
+      parameters:
+        - name: params
+          type: table
+          optional: true
+          desc: Additional parameters.
+          members:
+            - name: defaultFlags
+              type: table
+              optional: true
+              desc: Default flags.
+            
+            - name: clientFeatures
+              type: table
+              optional: true
+              desc: Client features.
+        
+        - name: callback
+          type: function
+          desc: A function that will be called with the flags.
+          parameters:
+            - name: flags
+              type: table
+              desc: A table containing the flags. 
