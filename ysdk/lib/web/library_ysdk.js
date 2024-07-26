@@ -139,7 +139,7 @@ let LisGamesSDKLib = {
             medium: player.getPhoto('medium') || "",
             large: player.getPhoto('large') || "",
           },
-          payingStatus: player.getPayingStatus() || "",
+          paying_status: player.getPayingStatus() || "",
         });
 
         const csignature = Utils.allocateString(player.signature || '');

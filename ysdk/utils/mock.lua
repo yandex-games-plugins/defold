@@ -78,7 +78,7 @@ local player = {}
 ---@field logged_in boolean
 ---@field unique_id string
 ---@field name string
----@field payingStatus "paying"|"partially_paying"|"not_paying"|"unknown"
+---@field paying_status "paying"|"partially_paying"|"not_paying"|"unknown"
 ---@field photo PhotoTable
 
 ---@param callback fun(self: any, player: YSDK_Player_Info|nil, signature: string|nil): nil
