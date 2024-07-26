@@ -2,13 +2,25 @@ local i18n = require('ysdk.i18n');
 local T = i18n.localize;
 
 local function log(newline)
+    -- Print to text node
     local node = gui.get_node("label_log")
-    local text = gui.get_text(node)
-    gui.set_text(node, text == "" and newline or text .. "\n" .. newline)
+    local prevText = gui.get_text(node)
+    local text = "";
+
+    if string.len(prevText) > 0 and string.len(prevText) + string.len(newline) + 1 < 8192 then
+        text = prevText .. "\n" .. newline
+    else
+        text = newline
+    end
+
+    gui.set_text(node, text)
     local text_metrics = gui.get_text_metrics_from_node(node)
     local pos = gui.get_position(node)
     pos.y = 640 - math.min(0, gui.get_size(node).y - text_metrics.height);
     gui.set_position(node, pos)
+
+    -- Regular print
+    print(newline);
 end
 
 local buttons = {
@@ -16,19 +28,18 @@ local buttons = {
     ["set_language_en/button"] = function() i18n.set_language("en") end,
     ["set_language_ru/button"] = function() i18n.set_language("ru") end,
     ["fullscreen_ad/button"] = function()
-        ysdk.adv.show_fullscreen_adv()
         ysdk.adv.show_fullscreen_adv({
             on_open = function(self)
-                log("show_rewarded_adv on_open")
+                log("show_fullscreen_adv on_open")
             end,
             on_close = function(self, was_shown)
                 log("show_fullscreen_adv on_close " .. tostring(was_shown))
             end,
             on_error = function(self, error)
-                log("show_rewarded_adv on_error " .. error)
+                log("show_fullscreen_adv on_error " .. error)
             end,
-            on_offline = function (self)
-                log("show_rewarded_adv on_offline")
+            on_offline = function(self)
+                log("show_fullscreen_adv on_offline")
             end
         })
     end,
@@ -44,7 +55,7 @@ local buttons = {
                 log("show_rewarded_adv on_close")
             end,
             on_error = function(self, error)
-                log("show_rewarded_adv on_error" .. error)
+                log("show_rewarded_adv on_error " .. error)
             end,
         })
     end,
@@ -55,11 +66,14 @@ local buttons = {
             end
         end, { signed = true })
     end,
+    ["server_time/button"] = function()
+        log("server time: " .. ysdk.server_time())
+    end,
 }
 
 local function on_localize()
     i18n.gui("Localized Button/button_label", "button")
-    log(json.encode(i18n.get_translations()))
+    log(json.encode(i18n.get_translations() or {}))
 end
 
 function init(self)
