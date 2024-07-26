@@ -4,3 +4,5 @@
 Thumbs.db
 /.defold
 /.vscode
+manifest.private.der
+manifest.public.der

@@ -1,3 +1,6 @@
 /.defold/api
 /.idea
 /.vscode
+/cover.png
+/manifest.private.der
+/manifest.public.der
