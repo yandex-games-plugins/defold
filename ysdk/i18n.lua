@@ -1,3 +1,4 @@
+---@type table|nil
 local current_translations = nil
 local change_lang_callbacks = {}
 
