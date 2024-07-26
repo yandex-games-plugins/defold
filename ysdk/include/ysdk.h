@@ -82,8 +82,13 @@ void JS_GetCatalog(GetCatalogHandler handler,
 // Consume Purchase
 // ===============================================
 
+typedef void (*ConsumePurchaseHandler)(dmScript::LuaCallbackInfo *callback,
+                                       const int success);
+
 extern "C" {
-void JS_ConsumePurchase(const char *purchaseToken);
+void JS_ConsumePurchase(ConsumePurchaseHandler handler,
+                        dmScript::LuaCallbackInfo *callback,
+                        const char *purchaseToken);
 }
 
 #pragma endregion

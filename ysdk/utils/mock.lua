@@ -62,7 +62,8 @@ function payments.get_catalog(callback)
 end
 
 ---@param purchaseToken string String, a token returned by the create_purchase() and get_purchases() methods.
-function payments.consume_purchase(purchaseToken)
+---@param callback (fun(self: any, success: boolean): nil)|nil
+function payments.consume_purchase(purchaseToken, callback)
   print("consume_purchase")
 end
 
@@ -423,7 +424,7 @@ ysdk.device_info = {
 
 ---@class YSDK_GetFlagsParams
 ---@field defaultFlags table<string, string>|nil
----@field clientFeatures YSDK_ClientFeature[]|nil 
+---@field clientFeatures YSDK_ClientFeature[]|nil
 
 ---@param params YSDK_GetFlagsParams|nil
 ---@param callback fun(self: any, flags: table<string, string>): nil

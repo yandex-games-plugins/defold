@@ -112,13 +112,21 @@ let LisGamesSDKLib = {
       });
   },
 
-  JS_ConsumePurchase: function (cpurchaseToken) {
+  JS_ConsumePurchase: function (handler, callback, cpurchaseToken) {
     const purchaseToken = UTF8ToString(cpurchaseToken);
 
     window.ysdk.getPayments()
       .then(function (payments) {
         return payments.consumePurchase(purchaseToken);
-      })
+      }).then(function () {
+        if (callback) {
+          {{{ makeDynCall('vii', 'handler') }}}(callback, 1)
+        }
+      }).catch(function () {
+        if (callback) {
+          {{{ makeDynCall('vii', 'handler') }}}(callback, 0)
+        }
+      });
   },
 
 //#endregion

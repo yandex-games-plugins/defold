@@ -215,13 +215,37 @@ static int CPP_GetCatalog(lua_State *L) {
 // Consume Purchase
 // ===============================================
 
+static void CPP_ConsumePurchase_Handler(dmScript::LuaCallbackInfo *callback,
+                                        const int success) {
+  lua_State *L = dmScript::GetCallbackLuaContext(callback);
+
+  if (!dmScript::SetupCallback(callback)) {
+    dmLogError("Failed to setup callback");
+    return;
+  }
+
+  lua_pushboolean(L, success);
+
+  dmScript::PCall(L, 2, 0);
+
+  dmScript::TeardownCallback(callback);
+}
+
 static int CPP_ConsumePurchase(lua_State *L) {
   int top = lua_gettop(L);
 
+#if defined(DM_PLATFORM_HTML5)
   const char *PurchaseToken = luaL_checkstring(L, 1);
 
-#if defined(DM_PLATFORM_HTML5)
-  JS_ConsumePurchase(PurchaseToken);
+  dmScript::LuaCallbackInfo *callback;
+  if (lua_isfunction(L, 2)) {
+    callback = dmScript::CreateCallback(L, 2);
+  } else {
+    callback = NULL;
+  }
+
+  JS_ConsumePurchase((ConsumePurchaseHandler)CPP_ConsumePurchase_Handler, callback,
+                     PurchaseToken);
 #endif
 
   assert(top == lua_gettop(L));
