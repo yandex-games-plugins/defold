@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2024.09.06
+
+### Fixed
+
+- Compilation error in HMTL5 target
+
 ## [1.2.0] - 2024.07.26
 
 ### Added
