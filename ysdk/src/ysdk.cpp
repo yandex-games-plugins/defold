@@ -441,7 +441,7 @@ static int CPP_GetPlayerData(lua_State *L) {
 #if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-  char *keys
+  char *keys;
   if (lua_istable(L, 2)) {
     keys = dmYandex::LuaTableToJSON(L, 2);
   } else {
