@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2024.09.13
+
+### Fixed
+
+- Fixed broken leaderboards methods
+
 ## [1.2.1] - 2024.09.06
 
 ### Fixed
