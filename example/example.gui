@@ -253,5 +253,113 @@ nodes {
   overridden_fields: 10
   template_node_child: true
 }
+nodes {
+  position {
+    x: 145.0
+    y: 410.0
+  }
+  type: TYPE_TEMPLATE
+  id: "leaderboard_entries"
+  inherit_alpha: true
+  template: "/example/button.gui"
+}
+nodes {
+  size {
+    x: 250.0
+    y: 32.0
+  }
+  type: TYPE_BOX
+  id: "leaderboard_entries/button"
+  parent: "leaderboard_entries"
+  overridden_fields: 4
+  template_node_child: true
+}
+nodes {
+  size {
+    x: 250.0
+    y: 32.0
+  }
+  type: TYPE_TEXT
+  text: "Leaderboard Entries"
+  font: "Gentium Font"
+  id: "leaderboard_entries/button_label"
+  parent: "leaderboard_entries/button"
+  overridden_fields: 4
+  overridden_fields: 8
+  overridden_fields: 10
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 145.0
+    y: 360.0
+  }
+  type: TYPE_TEMPLATE
+  id: "set_leaderboard_score"
+  inherit_alpha: true
+  template: "/example/button.gui"
+}
+nodes {
+  size {
+    x: 250.0
+    y: 32.0
+  }
+  type: TYPE_BOX
+  id: "set_leaderboard_score/button"
+  parent: "set_leaderboard_score"
+  overridden_fields: 4
+  template_node_child: true
+}
+nodes {
+  size {
+    x: 250.0
+    y: 32.0
+  }
+  type: TYPE_TEXT
+  text: "Set Leaderboard Score"
+  font: "Gentium Font"
+  id: "set_leaderboard_score/button_label"
+  parent: "set_leaderboard_score/button"
+  overridden_fields: 4
+  overridden_fields: 8
+  overridden_fields: 10
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 170.0
+    y: 310.0
+  }
+  type: TYPE_TEMPLATE
+  id: "leaderboard_description"
+  inherit_alpha: true
+  template: "/example/button.gui"
+}
+nodes {
+  size {
+    x: 300.0
+    y: 32.0
+  }
+  type: TYPE_BOX
+  id: "leaderboard_description/button"
+  parent: "leaderboard_description"
+  overridden_fields: 4
+  template_node_child: true
+}
+nodes {
+  size {
+    x: 300.0
+    y: 32.0
+  }
+  type: TYPE_TEXT
+  text: "Leaderboard Description"
+  font: "Gentium Font"
+  id: "leaderboard_description/button_label"
+  parent: "leaderboard_description/button"
+  overridden_fields: 4
+  overridden_fields: 8
+  overridden_fields: 10
+  template_node_child: true
+}
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

@@ -43,7 +43,7 @@ let LisGamesSDKLib = {
       .then(function (payments) {
         return payments.purchase({ 
           id: params.id, 
-          developerPayload: params.developerPayload || ''
+          developerPayload: params.developer_payload || ''
         });
       })
       .then(function (purchase) {
@@ -136,7 +136,10 @@ let LisGamesSDKLib = {
   JS_GetPlayerInfo: function (handler, callback, cparams) {    
     const params = cparams ? JSON.parse(UTF8ToString(cparams)) : undefined;
 
-    window.ysdk.getPlayer(params)
+    window.ysdk.getPlayer({
+      signed: params.signed || false,
+      scopes: params.scopes || false
+    })
       .then(function (player) {
         const cplayerInfo = Utils.allocateJSON({
           logged_in: player.getMode() !== 'lite',
@@ -402,14 +405,15 @@ JS_DispatchEvent: function (ceventName, cdetail) {
       })
       .then(function (res) {
         const description = {
-          app_id: res.app_id,
+          app_id: res.appID,
           default: res.default,
           invert_sort_order: res.description.invert_sort_order,
           decimal_offset: res.description.score_format.options.decimal_offset,
           type: res.description.type,
-          name: res.description.name,
-          title: res.description.title,  
+          name: res.name,
+          title: res.title,  
         };
+        console.log(res,description)
         {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(description))
       })
       .catch(function () {
@@ -468,16 +472,22 @@ JS_DispatchEvent: function (ceventName, cdetail) {
 
     window.ysdk.getLeaderboards()
       .then(function (lb) {
+        console.log("3", lb,  {
+          includeUser: params?.include_user || false,
+          quantityAround: params?.quantity_around || 5,
+          quantityTop: params?.quantity_top || 5,
+        })
         return lb.getLeaderboardEntries(
           leaderboardName,
           {
-            includeUser: params.includeUser || false,
-            quantityAround: params.quantityAround || 5,
-            quantityTop: params.quantityTop || 5,
+            includeUser: params?.include_user || false,
+            quantityAround: params?.quantity_around || 5,
+            quantityTop: params?.quantity_top || 5,
           }
         );
       })
       .then(function (res) {
+        console.log("4", res)
         const entries = {
           leaderboard: {
             app_id: res.leaderboard.app_id,
@@ -492,26 +502,27 @@ JS_DispatchEvent: function (ceventName, cdetail) {
           user_rank: res.userRank,
           entries: res.entries.map(function (entry) {
             return {
-              score: res.score,
-              extraData: res.extraData,
-              rank: res.rank,
+              score: entry.score,
+              extraData: entry.extraData,
+              rank: entry.rank,
               avatar_src: {
-                small: res.player.getAvatarSrc("small"),
-                medium: res.player.getAvatarSrc("medium"),
-                large: res.player.getAvatarSrc("large"),
+                small: entry.player.getAvatarSrc("small"),
+                medium: entry.player.getAvatarSrc("medium"),
+                large: entry.player.getAvatarSrc("large"),
               },
               avatar_srcset: {
-                small: res.player.getAvatarSrcSet("small"),
-                medium: res.player.getAvatarSrcSet("medium"),
-                large: res.player.getAvatarSrcSet("large"),
+                small: entry.player.getAvatarSrcSet("small"),
+                medium: entry.player.getAvatarSrcSet("medium"),
+                large: entry.player.getAvatarSrcSet("large"),
               },
-              lang: res.player.lang,
-              public_name: res.player.public_name,
-              unique_id: res.player.unique_id,
-              formattedScore: res.formattedScore,
+              lang: entry.player.lang,
+              public_name: entry.player.public_name,
+              unique_id: entry.player.unique_id,
+              formattedScore: entry.formattedScore,
             };
           }),
         }
+        console.log("5", entries);
         {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(entries))
       })
       .catch(function () {

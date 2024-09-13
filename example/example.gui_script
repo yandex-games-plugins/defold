@@ -69,6 +69,23 @@ local buttons = {
     ["server_time/button"] = function()
         log("server time: " .. ysdk.server_time())
     end,
+    ["leaderboard_entries/button"] = function()
+        ysdk.leaderboards.get_entries("lidb", function(self, entries)
+            log(json.encode(entries))
+        end, {
+            ["quantity_top"] = 3,
+            ["include_user"] = true,
+            ["quantity_around"] = 1,
+        })
+    end,
+    ["set_leaderboard_score/button"] = function()
+        ysdk.leaderboards.set_score("lidb", 999)
+    end,
+    ["leaderboard_description/button"] = function()
+        ysdk.leaderboards.get_description("lidb", function(self, description)
+            log(json.encode(description))
+        end)
+    end,
 }
 
 local function on_localize()

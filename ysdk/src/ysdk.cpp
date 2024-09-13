@@ -1207,7 +1207,7 @@ CPP_GetLeaderboardDescription_Handler(dmScript::LuaCallbackInfo *callback,
     lua_pushnil(L);
   }
 
-  dmScript::PCall(L, 3, 0);
+  dmScript::PCall(L, 2, 0);
 
   dmScript::TeardownCallback(callback);
 }
