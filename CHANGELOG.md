@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2024.09.14
+
+### Changed
+
+- Argument `params` in `player.get_info` is now optional
+
 ## [1.2.2] - 2024.09.13
 
 ### Fixed
