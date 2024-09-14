@@ -39,11 +39,11 @@ let LisGamesSDKLib = {
   JS_CreatePurchase: function (handler, callback, cparams) {
     const params = JSON.parse(UTF8ToString(cparams));
 
-    window.ysdk.getPayments({ signed: params.signed || false })
+    window.ysdk.getPayments({ signed: params.signed ?? false })
       .then(function (payments) {
         return payments.purchase({ 
-          id: params.id, 
-          developerPayload: params.developer_payload || ''
+          id: params.id,
+          developerPayload: params.developer_payload ?? ''
         });
       })
       .then(function (purchase) {
@@ -52,7 +52,7 @@ let LisGamesSDKLib = {
           purchase_token: purchase.purchaseToken,
           developer_payload: purchase.developerPayload,
         });
-        const csignature = Utils.allocateString(purchase.signature || '');
+        const csignature = Utils.allocateString(purchase.signature ?? '');
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cpurchase, csignature)
       })
       .catch(function () {
@@ -63,7 +63,7 @@ let LisGamesSDKLib = {
   JS_GetPurchases: function (handler, callback, cparams) {
     const params = JSON.parse(UTF8ToString(cparams));
 
-    window.ysdk.getPayments({ signed: params.signed || false })
+    window.ysdk.getPayments({ signed: params.signed ?? false })
       .then(function (payments) {
         return payments.getPurchases();
       })
@@ -75,7 +75,7 @@ let LisGamesSDKLib = {
             developer_payload: purchase.developerPayload,
           };
         }));
-        const csignature = Utils.allocateString(purchases.signature || '');
+        const csignature = Utils.allocateString(purchases.signature ?? '');
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cpurchase, csignature)
       })
       .catch(function () {
@@ -137,23 +137,23 @@ let LisGamesSDKLib = {
     const params = cparams ? JSON.parse(UTF8ToString(cparams)) : undefined;
 
     window.ysdk.getPlayer({
-      signed: params.signed || false,
-      scopes: params.scopes || false
+      signed: params?.signed ?? false,
+      scopes: params?.scopes ?? false
     })
       .then(function (player) {
         const cplayerInfo = Utils.allocateJSON({
           logged_in: player.getMode() !== 'lite',
-          unique_id: player.getUniqueID() || "",
-          name: player.getName() || "",
+          unique_id: player.getUniqueID() ?? "",
+          name: player.getName() ?? "",
           photo: {
-            small: player.getPhoto('small') || "",
-            medium: player.getPhoto('medium') || "",
-            large: player.getPhoto('large') || "",
+            small: player.getPhoto('small') ?? "",
+            medium: player.getPhoto('medium') ?? "",
+            large: player.getPhoto('large') ?? "",
           },
-          paying_status: player.getPayingStatus() || "",
+          paying_status: player.getPayingStatus() ?? "",
         });
 
-        const csignature = Utils.allocateString(player.signature || '');
+        const csignature = Utils.allocateString(player.signature ?? '');
 
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cplayerInfo, csignature)
       })
@@ -282,7 +282,7 @@ let LisGamesSDKLib = {
     ysdk.feedback
       .canReview()
       .then(function (response) {
-          {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, response.value, Utils.allocateString(repsonse.reason || ''))
+          {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, response.value, Utils.allocateString(repsonse.reason ?? ''))
       })
       .catch(function () {
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 0, 0, Utils.allocateString(''))
@@ -359,7 +359,7 @@ let LisGamesSDKLib = {
   JS_GetBannerAdvStatus: function(handler, callback) {
     ysdk.adv.getBannerAdvStatus()
       .then(function (response) {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, response.stickyAdvIsShowing, Utils.allocateString(response.reason || ''));
+        {{{ makeDynCall('viii', 'handler') }}}(callback, response.stickyAdvIsShowing, Utils.allocateString(response.reason ?? ''));
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, Utils.allocateString(''));
@@ -424,7 +424,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
   JS_SetLeaderboardScore: function (cleaderboardName, cscore, cextraData) {
     const leaderboardName = UTF8ToString(cleaderboardName);
     const score = parseFloat(UTF8ToString(cscore));
-    const extraData = UTF8ToString(cextraData) || undefined;
+    const extraData = UTF8ToString(cextraData) ?? undefined;
 
     window.ysdk.getLeaderboards()
       .then(function (lb) {
@@ -473,16 +473,16 @@ JS_DispatchEvent: function (ceventName, cdetail) {
     window.ysdk.getLeaderboards()
       .then(function (lb) {
         console.log("3", lb,  {
-          includeUser: params?.include_user || false,
-          quantityAround: params?.quantity_around || 5,
-          quantityTop: params?.quantity_top || 5,
+          includeUser: params?.include_user ?? false,
+          quantityAround: params?.quantity_around ?? 5,
+          quantityTop: params?.quantity_top ?? 5,
         })
         return lb.getLeaderboardEntries(
           leaderboardName,
           {
-            includeUser: params?.include_user || false,
-            quantityAround: params?.quantity_around || 5,
-            quantityTop: params?.quantity_top || 5,
+            includeUser: params?.include_user ?? false,
+            quantityAround: params?.quantity_around ?? 5,
+            quantityTop: params?.quantity_top ?? 5,
           }
         );
       })
@@ -614,8 +614,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
     window.ysdk
       .getFlags(params)
       .then(function (flags) {
-        const cflags = Utils.allocateJSON(flags);
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, cflags)
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(flags))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -627,7 +626,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
 //#region Server Time
 
   JS_GetServerTime: function (handler, callback) {
-    return window.ysdk.serverTime() || 0;
+    return window.ysdk.serverTime() ?? 0;
   }
 
 //#endregion
