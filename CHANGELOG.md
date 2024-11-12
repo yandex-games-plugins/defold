@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.4] - 2024.11.12
+
+### Fixed
+
+- Fixed typos in get leaderboard entries fields
+
 ## [1.2.3] - 2024.09.14
 
 ### Changed
