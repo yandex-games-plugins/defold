@@ -516,8 +516,8 @@ JS_DispatchEvent: function (ceventName, cdetail) {
                 large: entry.player.getAvatarSrcSet("large"),
               },
               lang: entry.player.lang,
-              public_name: entry.player.public_name,
-              unique_id: entry.player.unique_id,
+              public_name: entry.player.publicName,
+              unique_id: entry.player.uniqueID,
               formattedScore: entry.formattedScore,
             };
           }),
