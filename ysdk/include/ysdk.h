@@ -266,11 +266,13 @@ void JS_HideBannerAdv();
 
 #pragma region Events
 
-typedef void (*OnEventHandler)(dmScript::LuaCallbackInfo *callback);
+typedef void (*CallEventCallback)(dmScript::LuaCallbackInfo *callback);
+typedef void (*DestroyEventCallback)(dmScript::LuaCallbackInfo *callback);
 
 extern "C" {
-void JS_OnEvent(OnEventHandler handler, dmScript::LuaCallbackInfo *callback,
-                const char *eventName);
+void JS_InitEvents(CallEventCallback callEventCallback, DestroyEventCallback destroyEventCallback);
+void JS_OnEvent(const char *eventName, const void *pointer, dmScript::LuaCallbackInfo *callback);
+void JS_OffEvent(const char *eventName, const void *pointer);
 void JS_DispatchEvent(const char *eventName, const char *detail);
 }
 

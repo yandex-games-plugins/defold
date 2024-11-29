@@ -1141,26 +1141,32 @@ static int Init_Adv(lua_State *L) {
 
 #pragma region Events
 
-static void CPP_OnEvent_Handler(dmScript::LuaCallbackInfo *callback) {
-  lua_State *L = dmScript::GetCallbackLuaContext(callback);
-
-  if (!dmScript::SetupCallback(callback)) {
-    dmLogError("Failed to setup callback");
-    return;
-  }
-
-  dmScript::PCall(L, 1, 0);
-}
-
 static int CPP_OnEvent(lua_State *L) {
   int top = lua_gettop(L);
 
 #if defined(DM_PLATFORM_HTML5)
   const char *eventName = luaL_checkstring(L, 1);
 
+  const void *pointer = lua_topointer(L, 2);
+
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
 
-  JS_OnEvent((OnEventHandler)CPP_OnEvent_Handler, callback, eventName);
+  JS_OnEvent(eventName, pointer, callback);
+#endif
+
+  assert(top == lua_gettop(L));
+  return 0;
+}
+
+static int CPP_OffEvent(lua_State *L) {
+  int top = lua_gettop(L);
+
+#if defined(DM_PLATFORM_HTML5)
+  const char *eventName = luaL_checkstring(L, 1);
+
+  const void *pointer = lua_topointer(L, 2);
+
+  JS_OffEvent(eventName, pointer);
 #endif
 
   assert(top == lua_gettop(L));
@@ -1172,7 +1178,7 @@ static int CPP_DispatchEvent(lua_State *L) {
 
 #if defined(DM_PLATFORM_HTML5)
   const char *eventName = luaL_checkstring(L, 1);
-  char *detail = dmYandex::LuaTableToJSON(L, 2);
+  char *detail = LuaTableToJSON(L, 2);
 
   JS_DispatchEvent(eventName, detail);
 
@@ -1181,6 +1187,38 @@ static int CPP_DispatchEvent(lua_State *L) {
 
   assert(top == lua_gettop(L));
   return 0;
+}
+
+// ===============================================
+// Init Events
+// ===============================================
+
+static void CPP_CallEventCallback(dmScript::LuaCallbackInfo *callback) {
+  lua_State *L = dmScript::GetCallbackLuaContext(callback);
+
+  if (!dmScript::SetupCallback(callback)) {
+    dmLogError("Failed to setup callback");
+    return;
+  }
+
+  dmScript::PCall(L, 1, 0);
+
+  dmScript::TeardownCallback(callback);
+}
+
+static void CPP_DestoryEventCallback(dmScript::LuaCallbackInfo *callback) {
+  dmScript::DestroyCallback(callback);
+}
+
+static int Init_Events(lua_State *L) {
+  int top = lua_gettop(L);
+
+#if defined(DM_PLATFORM_HTML5)
+  JS_InitEvents((CallEventCallback)CPP_CallEventCallback, (DestroyEventCallback)CPP_DestoryEventCallback);
+#endif
+
+  assert(top == lua_gettop(L));
+  return 1;
 }
 
 #pragma endregion
@@ -1725,6 +1763,7 @@ static int CPP_ServerTime(lua_State *L) {
 
 static const luaL_reg Module_methods[] = {{"get_flags", CPP_GetFlags},
                                           {"on_event", CPP_OnEvent},
+                                          {"off_event", CPP_OffEvent},
                                           {"dispatch_event", CPP_DispatchEvent},
                                           {"server_time", CPP_ServerTime},
                                           {0, 0}};
@@ -1745,6 +1784,7 @@ static void LuaInit(lua_State *L) {
   Init_Shortcut(L);
   Init_Clipboard(L);
   Init_DeviceInfo(L);
+  Init_Events(L);
 
   lua_pop(L, 1);
 

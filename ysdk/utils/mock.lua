@@ -249,12 +249,18 @@ ysdk.adv = adv
 
 -- region Events
 
----@alias SDKEvent "EXIT" | "HISTORY_BACK"
+---@alias SDKEvent "GAME_API_PAUSE" | "GAME_API_RESUME" | "EXIT" | "HISTORY_BACK"
 
 ---@param eventName SDKEvent
 ---@param listener fun(self: any)
 function ysdk.on_event(eventName, listener)
   print("on_event", eventName)
+end
+
+---@param eventName SDKEvent
+---@param listener fun(self: any)
+function ysdk.off_event(eventName, listener)
+  print("off_event", eventName)
 end
 
 ---@param eventName SDKEvent

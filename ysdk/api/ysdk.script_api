@@ -418,6 +418,18 @@
         - name: listener
           type: function
           desc: The function to call when the event is dispatched.
+
+    - name: off_event
+      type: function
+      desc: Unregisters a listener for an SDK event.
+      parameters:
+        - name: eventName
+          type: string
+          desc: The name of the event to listen for.
+
+        - name: listener
+          type: function
+          desc: The function to call when the event is dispatched.
     
     - name: dispatch_event
       type: function

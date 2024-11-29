@@ -1,5 +1,5 @@
 let LisGamesSDKLib = {
-  $Utils: {
+  $YGDefold: {
     allocateString: function (str) {
       const size = lengthBytesUTF8(str) + 1;
       const idx = _malloc(size);
@@ -8,7 +8,7 @@ let LisGamesSDKLib = {
     },
 
     allocateJSON: function (str) {
-      return Utils.allocateString(JSON.stringify(str));
+      return YGDefold.allocateString(JSON.stringify(str));
     },
   },
 
@@ -47,12 +47,12 @@ let LisGamesSDKLib = {
         });
       })
       .then(function (purchase) {
-        const cpurchase = Utils.allocateJSON({
+        const cpurchase = YGDefold.allocateJSON({
           product_id: purchase.productID,
           purchase_token: purchase.purchaseToken,
           developer_payload: purchase.developerPayload,
         });
-        const csignature = Utils.allocateString(purchase.signature ?? '');
+        const csignature = YGDefold.allocateString(purchase.signature ?? '');
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cpurchase, csignature)
       })
       .catch(function () {
@@ -68,14 +68,14 @@ let LisGamesSDKLib = {
         return payments.getPurchases();
       })
       .then(function (purchases) {
-        const cpurchase = Utils.allocateJSON(purchases.map(function (purchase) {
+        const cpurchase = YGDefold.allocateJSON(purchases.map(function (purchase) {
           return {
             product_id: purchase.productID,
             purchase_token: purchase.purchaseToken,
             developer_payload: purchase.developerPayload,
           };
         }));
-        const csignature = Utils.allocateString(purchases.signature ?? '');
+        const csignature = YGDefold.allocateString(purchases.signature ?? '');
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cpurchase, csignature)
       })
       .catch(function () {
@@ -89,7 +89,7 @@ let LisGamesSDKLib = {
         return payments.getCatalog();
       })
       .then(function (purchases) {
-        const ccatalog = Utils.allocateJSON(purchases.map(function (product) {
+        const ccatalog = YGDefold.allocateJSON(purchases.map(function (product) {
           return {
             id: product.id,
             title: product.title,
@@ -141,7 +141,7 @@ let LisGamesSDKLib = {
       scopes: params?.scopes ?? false
     })
       .then(function (player) {
-        const cplayerInfo = Utils.allocateJSON({
+        const cplayerInfo = YGDefold.allocateJSON({
           logged_in: player.getMode() !== 'lite',
           unique_id: player.getUniqueID() ?? "",
           name: player.getName() ?? "",
@@ -153,7 +153,7 @@ let LisGamesSDKLib = {
           paying_status: player.getPayingStatus() ?? "",
         });
 
-        const csignature = Utils.allocateString(player.signature ?? '');
+        const csignature = YGDefold.allocateString(player.signature ?? '');
 
         {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, cplayerInfo, csignature)
       })
@@ -183,7 +183,7 @@ let LisGamesSDKLib = {
             {{{ makeDynCall('viii', 'handler') }}}(
               callback,
                1, 
-              Utils.allocateJSON(
+              YGDefold.allocateJSON(
                 ids.map(function (id) {
                   return {
                     app_id: id.appID,
@@ -216,7 +216,7 @@ let LisGamesSDKLib = {
         return player.getData(keys);
       })
       .then(function (data) {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(data))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(data))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -247,7 +247,7 @@ let LisGamesSDKLib = {
         return player.getStats(keys);
       })
       .then(function (stats) {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(stats))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(stats))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -282,10 +282,10 @@ let LisGamesSDKLib = {
     ysdk.feedback
       .canReview()
       .then(function (response) {
-          {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, response.value, Utils.allocateString(repsonse.reason ?? ''))
+          {{{ makeDynCall('viiii', 'handler') }}}(callback, 1, response.value, YGDefold.allocateString(repsonse.reason ?? ''))
       })
       .catch(function () {
-        {{{ makeDynCall('viiii', 'handler') }}}(callback, 0, 0, Utils.allocateString(''))
+        {{{ makeDynCall('viiii', 'handler') }}}(callback, 0, 0, YGDefold.allocateString(''))
       });
   },
 
@@ -311,7 +311,7 @@ let LisGamesSDKLib = {
       i18n: window.ysdk.environment.i18n,
       payload: window.ysdk.environment.payload,  
     };
-    return Utils.allocateString(JSON.stringify(environment));
+    return YGDefold.allocateString(JSON.stringify(environment));
   },
 
 //#endregion
@@ -322,16 +322,16 @@ let LisGamesSDKLib = {
     window.ysdk.adv.showFullscreenAdv({
         callbacks: {
             onOpen: function() {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 0, Utils.allocateString(''));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 0, YGDefold.allocateString(''));
             },
             onClose: function(wasShown) {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 1, Utils.allocateJSON(wasShown));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 1, YGDefold.allocateJSON(wasShown));
             },
             onError: function(error) {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 2, Utils.allocateString(error.toString()));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 2, YGDefold.allocateString(error.toString()));
             },
             onOffline: function() {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 3, Utils.allocateString(''));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onClose, onError, onOffline, 3, YGDefold.allocateString(''));
             }
         }
     });
@@ -341,16 +341,16 @@ let LisGamesSDKLib = {
     window.ysdk.adv.showRewardedVideo({
         callbacks: {
             onOpen: function() {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 0, Utils.allocateString(''));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 0, YGDefold.allocateString(''));
             },
             onRewarded: function() {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 1, Utils.allocateString(''));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 1, YGDefold.allocateString(''));
             },
             onClose: function() {
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 2, Utils.allocateString(''));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 2, YGDefold.allocateString(''));
             },
             onError: function(error) { 
-              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 3, Utils.allocateString(error.toString()));
+              {{{ makeDynCall('viiiiii', 'handler') }}}(onOpen, onRewarded, onClose, onError, 3, YGDefold.allocateString(error.toString()));
             }
         }
     });
@@ -359,10 +359,10 @@ let LisGamesSDKLib = {
   JS_GetBannerAdvStatus: function(handler, callback) {
     ysdk.adv.getBannerAdvStatus()
       .then(function (response) {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, response.stickyAdvIsShowing, Utils.allocateString(response.reason ?? ''));
+        {{{ makeDynCall('viii', 'handler') }}}(callback, response.stickyAdvIsShowing, YGDefold.allocateString(response.reason ?? ''));
       })
       .catch(function () {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 0, Utils.allocateString(''));
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 0, YGDefold.allocateString(''));
       });
   },
 
@@ -378,19 +378,87 @@ let LisGamesSDKLib = {
 
 //#region Events
 
-JS_OnEvent: function (handler, callback, ceventName) {
-  const eventName = UTF8ToString(ceventName);
+  JS_InitEvents: function (callEventCallback, destroyEventCallback) {
+    const EVENTS = {
+      "GAME_API_PAUSE": new Map(),
+      "GAME_API_RESUME": new Map(),
+      "EXIT": new Map(),
+      "HISTORY_BACK": new Map()
+    };
 
-  ysdk.onEvent(eventName, function () {
-    {{{ makeDynCall('vi', 'handler') }}}(callback);
-  });
-},
+    YGDefold.events = {
+      checkEventName: function (eventName) {
+        const handlers = EVENTS[eventName];
+    
+        if (handlers === undefined) {
+          console.error(`Unknown event name ${eventName}. Acceptable values: ${Object.keys(EVENTS).join(", ")}.`)
+          return false;
+        }
 
-JS_DispatchEvent: function (ceventName, cdetail) {
-  const eventName = UTF8ToString(ceventName);
-  const detail = JSON.parse(UTF8ToString(cdetail));
-  ysdk.dispatchEvent(eventName, detail);
-},
+        return true;
+      },
+
+      registerCallback: function (eventName, cPointer, callback) {
+        EVENTS[eventName].set(cPointer, callback);
+      },
+
+      destroyCallback: function (eventName, cPointer) {
+        const handlers = EVENTS[eventName];
+
+        const callback = handlers.get(cPointer);
+
+        {{{ makeDynCall('vi', 'destroyEventCallback') }}}(callback);
+
+        handlers.delete(cPointer);
+      },
+    }
+
+    ysdk.onEvent("game_api_pause", function () {
+      for (const [, callback] of EVENTS["GAME_API_PAUSE"]) {
+        {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
+      }
+    });
+
+    ysdk.onEvent("game_api_resume", function () {
+      for (const [, callback] of EVENTS["GAME_API_RESUME"]) {
+        {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
+      }
+    });
+
+    ysdk.onEvent("EXIT", function () {
+      for (const [, callback] of EVENTS["EXIT"]) {
+        {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
+      }
+    });
+
+    ysdk.onEvent("HISTORY_BACK", function () {
+      for (const [, callback] of EVENTS["HISTORY_BACK"]) {
+        {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
+      }
+    });
+  },
+
+  JS_OnEvent: function (ceventName, cPointer, callback) {
+    const eventName = UTF8ToString(ceventName);
+
+    if (YGDefold.events.checkEventName(eventName)) {
+      YGDefold.events.registerCallback(eventName, cPointer, callback)
+    }
+  },
+
+  JS_OffEvent: function (ceventName, cPointer) {
+    const eventName = UTF8ToString(ceventName);
+
+    if (YGDefold.events.checkEventName(eventName)) {
+      YGDefold.events.destroyCallback(eventName, cPointer);
+    }
+  },
+
+  JS_DispatchEvent: function (ceventName, cdetail) {
+    const eventName = UTF8ToString(ceventName);
+    const detail = JSON.parse(UTF8ToString(cdetail));
+    ysdk.dispatchEvent(eventName, detail);
+  },
 
 //#endregion
 
@@ -414,7 +482,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
           title: res.title,  
         };
         console.log(res,description)
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(description))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(description))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -459,7 +527,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
           unique_id: res.player.unique_id,
           formattedScore: res.formattedScore,
         }
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(player_entry))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(player_entry))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -523,7 +591,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
           }),
         }
         console.log("5", entries);
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(entries))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(entries))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -561,7 +629,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
 //#region Screen
 
   JS_Screen_Fullscreen_GetStatus: function() {
-    return Utils.allocateString(window.ysdk.screen.fullscreen.status);
+    return YGDefold.allocateString(window.ysdk.screen.fullscreen.status);
   },
 
   JS_Screen_Fullscreen_Request: function() {
@@ -573,7 +641,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
   },
 
   JS_Screen_Orientation_Get: function() {
-    return Utils.allocateString(window.ysdk.screen.orientation.value);
+    return YGDefold.allocateString(window.ysdk.screen.orientation.value);
   },
 
   JS_Screen_Orientation_Set: function(cvalue) {
@@ -601,7 +669,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
       isTablet: window.ysdk.deviceInfo.type === 'tablet',
       isTV: window.ysdk.deviceInfo.type === 'tv',
     };
-    return Utils.allocateString(JSON.stringify(deviceInfo));
+    return YGDefold.allocateString(JSON.stringify(deviceInfo));
   },
 
 //#endregion
@@ -614,7 +682,7 @@ JS_DispatchEvent: function (ceventName, cdetail) {
     window.ysdk
       .getFlags(params)
       .then(function (flags) {
-        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, Utils.allocateJSON(flags))
+        {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(flags))
       })
       .catch(function () {
         {{{ makeDynCall('viii', 'handler') }}}(callback, 0, 0)
@@ -632,5 +700,5 @@ JS_DispatchEvent: function (ceventName, cdetail) {
 //#endregion
 };
 
-autoAddDeps(LisGamesSDKLib, '$Utils');
+autoAddDeps(LisGamesSDKLib, '$YGDefold');
 mergeInto(LibraryManager.library, LisGamesSDKLib);
