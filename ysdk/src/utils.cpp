@@ -114,7 +114,7 @@ static int EncodeLuaTable(lua_State* L, int index, char* json_buffer, size_t jso
         return 0;
     }
 
-    bool is_array = dmYandex::IsLuaArray(L, index);
+    bool is_array = IsLuaArray(L, index);
 
     if(json_buffer) {
         json_buffer[cursor] = is_array ? '[' : '{';
@@ -231,7 +231,7 @@ static int EncodeLuaValue(lua_State* L, int index, char* buffer, size_t buffer_s
     return len;
 }
 
-bool dmYandex::IsLuaArray(lua_State* L, int index)
+bool IsLuaArray(lua_State* L, int index)
 {
   assert(lua_istable(L, index));
   int top = lua_gettop(L);
@@ -255,7 +255,7 @@ bool dmYandex::IsLuaArray(lua_State* L, int index)
   return table_is_array;
 }
 
-char* dmYandex::LuaTableToJSON(lua_State* L, int index)
+char* LuaTableToJSON(lua_State* L, int index)
 {
   assert(lua_istable(L, index));
   int top = lua_gettop(L);

@@ -113,7 +113,7 @@ static int CPP_CreatePurchase(lua_State *L) {
 
 #if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
-  char *params = dmYandex::LuaTableToJSON(L, 2);
+  char *params = LuaTableToJSON(L, 2);
 
   JS_CreatePurchase((CreatePurchaseHandler)CPP_CreatePurchase_Handler, callback,
                     params);
@@ -163,7 +163,7 @@ static int CPP_GetPurchases(lua_State *L) {
 #if defined(DM_PLATFORM_HTML5)
   dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
 
-  char *params = dmYandex::LuaTableToJSON(L, 2);
+  char *params = LuaTableToJSON(L, 2);
 
   JS_GetPurchases((GetPurchasesHandler)CPP_GetPurchases_Handler, callback,
                   params);
@@ -321,7 +321,7 @@ static int CPP_GetPlayerInfo(lua_State *L) {
   char *params;
 
   if (lua_istable(L, 2)) {
-    params = dmYandex::LuaTableToJSON(L, 2);
+    params = LuaTableToJSON(L, 2);
   } else {
     params = NULL;
   }
@@ -443,7 +443,7 @@ static int CPP_GetPlayerData(lua_State *L) {
 
   char *keys;
   if (lua_istable(L, 2)) {
-    keys = dmYandex::LuaTableToJSON(L, 2);
+    keys = LuaTableToJSON(L, 2);
   } else {
     keys = NULL;
   }
@@ -466,7 +466,7 @@ static int CPP_SetPlayerData(lua_State *L) {
   int top = lua_gettop(L);
 
 #if defined(DM_PLATFORM_HTML5)
-  char *data = dmYandex::LuaTableToJSON(L, 1);
+  char *data = LuaTableToJSON(L, 1);
   int flush = lua_toboolean(L, 2);
 
   JS_SetPlayerData(data, flush);
@@ -510,7 +510,7 @@ static int CPP_GetPlayerStats(lua_State *L) {
 
   char *keys;
   if (lua_istable(L, 2)) {
-    keys = dmYandex::LuaTableToJSON(L, 2);
+    keys = LuaTableToJSON(L, 2);
   } else {
     keys = NULL;
   }
@@ -535,7 +535,7 @@ static int CPP_IncrementPlayerStats(lua_State *L) {
   int top = lua_gettop(L);
 
 #if defined(DM_PLATFORM_HTML5)
-  char *increments = dmYandex::LuaTableToJSON(L, 1);
+  char *increments = LuaTableToJSON(L, 1);
 
   JS_IncrementPlayerStats(increments);
 
@@ -554,7 +554,7 @@ static int CPP_SetPlayerStats(lua_State *L) {
   int top = lua_gettop(L);
 
 #if defined(DM_PLATFORM_HTML5)
-  char *stats = dmYandex::LuaTableToJSON(L, 1);
+  char *stats = LuaTableToJSON(L, 1);
 
   JS_SetPlayerStats(stats);
 
@@ -1324,7 +1324,7 @@ static int CPP_GetLeaderboardEntries(lua_State *L) {
   if (lua_isnoneornil(L, 3)) {
     params = NULL;
   } else {
-    params = dmYandex::LuaTableToJSON(L, 3);
+    params = LuaTableToJSON(L, 3);
   }
 
   JS_GetLeaderboardEntries(
@@ -1684,7 +1684,7 @@ static int CPP_GetFlags(lua_State *L) {
   if (lua_isnoneornil(L, 2)) {
     params = NULL;
   } else {
-    params = dmYandex::LuaTableToJSON(L, 2);
+    params = LuaTableToJSON(L, 2);
   }
 
   JS_GetFlags((GetFlagsHandler)CPP_GetFlags_Handler, callback, params);
