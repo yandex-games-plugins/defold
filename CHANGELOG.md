@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2024.12.1
+
+### Added
+
+- Updated initialization stage 
+- Games API support
+- New `game_api_pause` and `game_api_resume` events
+- Event unsubscribtion functionality
+
 ## [1.2.4] - 2024.11.12
 
 ### Fixed
