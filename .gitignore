@@ -6,3 +6,4 @@ Thumbs.db
 /.vscode
 manifest.private.der
 manifest.public.der
+/.editor_settings
