@@ -413,25 +413,25 @@ let LisGamesSDKLib = {
       },
     }
 
-    ysdk.onEvent("game_api_pause", function () {
+    ysdk.on("game_api_pause", function () {
       for (const [, callback] of EVENTS["GAME_API_PAUSE"]) {
         {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
       }
     });
 
-    ysdk.onEvent("game_api_resume", function () {
+    ysdk.on("game_api_resume", function () {
       for (const [, callback] of EVENTS["GAME_API_RESUME"]) {
         {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
       }
     });
 
-    ysdk.onEvent("EXIT", function () {
+    ysdk.on("EXIT", function () {
       for (const [, callback] of EVENTS["EXIT"]) {
         {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
       }
     });
 
-    ysdk.onEvent("HISTORY_BACK", function () {
+    ysdk.on("HISTORY_BACK", function () {
       for (const [, callback] of EVENTS["HISTORY_BACK"]) {
         {{{ makeDynCall('vi', 'callEventCallback') }}}(callback);
       }
