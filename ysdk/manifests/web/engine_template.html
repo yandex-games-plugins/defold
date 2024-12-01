@@ -5,7 +5,11 @@
       var loaded = false;
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = "https://yandex.ru/games/sdk/v2";
+      if (location.href.includes("localhost") || location.href.includes("127.0.0.1")) {
+        script.src = "https://sdk.games.s3.yandex.net/sdk.js";
+      } else {
+        script.src = "/sdk.js";
+      }
       script.onload = function () {
         YaGames.init().then(function (ysdk) {
           window.ysdk = ysdk;
