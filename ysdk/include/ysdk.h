@@ -23,6 +23,21 @@ void JS_GameplayAPI_Start();
 void JS_GameplayAPI_Stop();
 }
 
+// ===============================================
+// Games API
+// ===============================================
+
+typedef void (*GetAllGamesHandler)(dmScript::LuaCallbackInfo *callback,
+                                      const int success, const char *json);
+
+typedef void (*GetGameByIDHandler)(dmScript::LuaCallbackInfo *callback,
+                                      const int success, const char *json);
+
+extern "C" {
+void JS_GamesAPI_GetAllGames(GetAllGamesHandler handler, dmScript::LuaCallbackInfo *callback);
+void JS_GamesAPI_GetGameByID(GetGameByIDHandler handler, dmScript::LuaCallbackInfo *callback, const int id);
+}
+
 #pragma endregion
 
 #pragma region Payments
@@ -32,7 +47,7 @@ void JS_GameplayAPI_Stop();
 // ===============================================
 
 typedef void (*CreatePurchaseHandler)(dmScript::LuaCallbackInfo *callback,
-                                      const int success, const char *jsons,
+                                      const int success, const char *json,
                                       const char *signature);
 
 extern "C" {
@@ -57,7 +72,7 @@ void JS_OpenAuthDialog(OpenAuthDialogHandler handler,
 // ===============================================
 
 typedef void (*GetPurchasesHandler)(dmScript::LuaCallbackInfo *callback,
-                                    const int success, const char *jsons,
+                                    const int success, const char *json,
                                     const char *signature);
 
 extern "C" {
@@ -99,7 +114,7 @@ void JS_ConsumePurchase(ConsumePurchaseHandler handler,
 // ===============================================
 
 typedef void (*GetPlayerInfoHandler)(dmScript::LuaCallbackInfo *callback,
-                                     const int success, const char *jsons,
+                                     const int success, const char *json,
                                      const char *signature);
 
 extern "C" {

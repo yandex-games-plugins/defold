@@ -22,6 +22,9 @@ static int CPP_LoadingAPI_Ready(lua_State *L) {
   return 1;
 }
 
+static const luaL_reg LoadingAPI_methods[] = {{"ready", CPP_LoadingAPI_Ready},
+                                              {0, 0}};
+
 // ===============================================
 // Gameplay API
 // ===============================================
@@ -40,15 +43,93 @@ static int CPP_GameplayAPI_Stop(lua_State *L) {
   return 1;
 }
 
+static const luaL_reg GameplayAPI_methods[] = {
+    {"start", CPP_GameplayAPI_Start}, {"stop", CPP_GameplayAPI_Stop}, {0, 0}};
+
+// ===============================================
+// Games API
+// ===============================================
+
+static void
+CPP_GamesAPI_GetAllGames_Handler(dmScript::LuaCallbackInfo *callback,
+                                 const int success, const char *json) {
+  lua_State *L = dmScript::GetCallbackLuaContext(callback);
+
+  if (!dmScript::SetupCallback(callback)) {
+    dmLogError("Failed to setup callback");
+    return;
+  }
+
+  if (success) {
+    dmScript::JsonToLua(L, json, strlen(json));
+  } else {
+    lua_pushnil(L);
+  }
+
+  dmScript::PCall(L, 2, 0);
+
+  dmScript::TeardownCallback(callback);
+}
+
+static int CPP_GamesAPI_GetAllGames(lua_State *L) {
+  int top = lua_gettop(L);
+
+#if defined(DM_PLATFORM_HTML5)
+  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 1);
+
+  JS_GamesAPI_GetAllGames((GetAllGamesHandler)CPP_GamesAPI_GetAllGames_Handler,
+                          callback);
+#endif
+
+  assert(top == lua_gettop(L));
+  return 1;
+}
+
+static void
+CPP_GamesAPI_GetGameByID_Handler(dmScript::LuaCallbackInfo *callback,
+                                 const int success, const char *json) {
+  lua_State *L = dmScript::GetCallbackLuaContext(callback);
+
+  if (!dmScript::SetupCallback(callback)) {
+    dmLogError("Failed to setup callback");
+    return;
+  }
+
+  if (success) {
+    dmScript::JsonToLua(L, json, strlen(json));
+  } else {
+    lua_pushnil(L);
+  }
+
+  dmScript::PCall(L, 2, 0);
+
+  dmScript::TeardownCallback(callback);
+}
+
+static int CPP_GamesAPI_GetGameByID(lua_State *L) {
+  int top = lua_gettop(L);
+
+#if defined(DM_PLATFORM_HTML5)
+  const int id = luaL_checkint(L, 1);
+
+  dmScript::LuaCallbackInfo *callback = dmScript::CreateCallback(L, 2);
+
+  JS_GamesAPI_GetGameByID((GetGameByIDHandler)CPP_GamesAPI_GetGameByID_Handler,
+                          callback, id);
+#endif
+
+  assert(top == lua_gettop(L));
+  return 1;
+}
+
+static const luaL_reg GamesAPI_methods[] = {
+    {"get_all_games", CPP_GamesAPI_GetAllGames},
+    {"get_game_by_id", CPP_GamesAPI_GetGameByID},
+    {0, 0}};
+
 // ===============================================
 // Init Features Table
 // ===============================================
-
-static const luaL_reg LoadingAPI_methods[] = {{"ready", CPP_LoadingAPI_Ready},
-                                              {0, 0}};
-
-static const luaL_reg GameplayAPI_methods[] = {
-    {"start", CPP_GameplayAPI_Start}, {"stop", CPP_GameplayAPI_Stop}, {0, 0}};
 
 static int Init_Features(lua_State *L) {
   int top = lua_gettop(L);
@@ -65,6 +146,11 @@ static int Init_Features(lua_State *L) {
   lua_newtable(L);
   luaL_register(L, NULL, GameplayAPI_methods);
   lua_settable(L, -3); // gameplay_api -> features
+
+  lua_pushliteral(L, "games_api");
+  lua_newtable(L);
+  luaL_register(L, NULL, GamesAPI_methods);
+  lua_settable(L, -3); // games_api -> features
 
   lua_settable(L, -3); // features -> ysdk
 
@@ -245,8 +331,8 @@ static int CPP_ConsumePurchase(lua_State *L) {
     callback = NULL;
   }
 
-  JS_ConsumePurchase((ConsumePurchaseHandler)CPP_ConsumePurchase_Handler, callback,
-                     PurchaseToken);
+  JS_ConsumePurchase((ConsumePurchaseHandler)CPP_ConsumePurchase_Handler,
+                     callback, PurchaseToken);
 #endif
 
   assert(top == lua_gettop(L));
@@ -1214,7 +1300,8 @@ static int Init_Events(lua_State *L) {
   int top = lua_gettop(L);
 
 #if defined(DM_PLATFORM_HTML5)
-  JS_InitEvents((CallEventCallback)CPP_CallEventCallback, (DestroyEventCallback)CPP_DestoryEventCallback);
+  JS_InitEvents((CallEventCallback)CPP_CallEventCallback,
+                (DestroyEventCallback)CPP_DestoryEventCallback);
 #endif
 
   assert(top == lua_gettop(L));
@@ -1761,12 +1848,10 @@ static int CPP_ServerTime(lua_State *L) {
 
 #pragma endregion
 
-static const luaL_reg Module_methods[] = {{"get_flags", CPP_GetFlags},
-                                          {"on_event", CPP_OnEvent},
-                                          {"off_event", CPP_OffEvent},
-                                          {"dispatch_event", CPP_DispatchEvent},
-                                          {"server_time", CPP_ServerTime},
-                                          {0, 0}};
+static const luaL_reg Module_methods[] = {
+    {"get_flags", CPP_GetFlags},     {"on_event", CPP_OnEvent},
+    {"off_event", CPP_OffEvent},     {"dispatch_event", CPP_DispatchEvent},
+    {"server_time", CPP_ServerTime}, {0, 0}};
 
 static void LuaInit(lua_State *L) {
   int top = lua_gettop(L);

@@ -32,6 +32,30 @@ let LisGamesSDKLib = {
     }
   },
 
+  JS_GamesAPI_GetAllGames: function (handler, callback) {
+    if (window.ysdk.features.GamesAPI) {
+      window.ysdk.features.GamesAPI.getAllGames()
+        .then(function (result) {
+          {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(result))
+        })
+        .catch(function () {
+          {{{ makeDynCall('viiii', 'handler') }}}(callback, 0, 0)
+        });
+    }
+  },
+
+  JS_GamesAPI_GetGameByID: function (handler, callback, id) {
+    if (window.ysdk.features.GamesAPI) {
+      window.ysdk.features.GamesAPI.getGameByID(id)
+        .then(function (result) {
+          {{{ makeDynCall('viii', 'handler') }}}(callback, 1, YGDefold.allocateJSON(result))
+        })
+        .catch(function () {
+          {{{ makeDynCall('viiii', 'handler') }}}(callback, 0, 0)
+        });
+    }
+  },
+
 //#endregion
 
 //#region Payments

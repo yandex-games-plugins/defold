@@ -6,21 +6,60 @@ ysdk = {}
 
 -- region Features
 
-ysdk.features = {
-  loading_api = {
-    ready = function()
-      print("loading_ready")
-    end
-  },
-  gameplay_api = {
-    start = function()
-      print("gameplay_start")
-    end,
-    stop = function()
-      print("gameplay_stop")
-    end,
-  },
-}
+-- local features = {}
+local features = {}
+
+local loading_api = {}
+
+function loading_api.ready()
+  print("loading_ready")
+end
+
+features.loading_api = loading_api
+
+local gameplay_api = {}
+
+function gameplay_api.start()
+  print("gameplay_start")
+end
+
+function gameplay_api.stop()
+  print("gameplay_stop")
+end
+
+features.gameplay_api = gameplay_api
+
+local games_api = {}
+
+function games_api.get_all_games(callback)
+  print("games_get_all_games")
+end
+
+function games_api.get_game_by_id(id, callback)
+  print("games_get_game_by_id")
+end
+
+features.games_api = games_api
+
+ysdk.features = features
+
+-- ysdk.features = {
+--   loading_api = {
+--     ready = function()
+--       print("loading_ready")
+--     end
+--   },
+--   gameplay_api = {
+--     start = function()
+--       print("gameplay_start")
+--     end,
+--     stop = function()
+--       print("gameplay_stop")
+--     end,
+--   },
+-- }
+
+-- ysdk.features = features
 
 -- endregion
 
@@ -447,7 +486,7 @@ ysdk.server_time = function()
   return 0
 end
 
---- endregion
+-- endregion
 
 -- region Types
 

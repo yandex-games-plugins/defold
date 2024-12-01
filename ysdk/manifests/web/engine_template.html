@@ -3,7 +3,10 @@
   <body>
     <script id="engine-start" type="text/javascript" merge="keep">
       var loaded = false;
-      var onload = function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://yandex.ru/games/sdk/v2";
+      script.onload = function () {
         YaGames.init().then(function (ysdk) {
           window.ysdk = ysdk;
           ysdk
@@ -25,11 +28,7 @@
             });
         });
       };
-      var ysdk = document.createElement("script");
-      ysdk.type = "text/javascript";
-      ysdk.src = "https://yandex.ru/games/sdk/v2";
-      ysdk.onload = onload;
-      document.head.appendChild(ysdk);
+      document.head.appendChild(script);
     </script>
   </body>
 </html>
